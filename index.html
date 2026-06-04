@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasarım Stilleri Oyun Alanı & AI Prompt Kütüphanesi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    boxShadow: {
+                        'neumorphic-in': 'inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff',
+                        'neumorphic-out': '5px 5px 10px #babecc, -5px -5px 10px #ffffff',
+                        'neumorphic-dark-in': 'inset 2px 2px 5px #121212, inset -5px -5px 10px #2a2a2a',
+                        'neumorphic-dark-out': '5px 5px 10px #121212, -5px -5px 10px #2a2a2a',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Glassmorphism custom styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Neumorphism custom styles */
+        .neu-bg {
+            background: #e0e0e0;
+        }
+        .dark .neu-bg {
+            background: #1e1e1e;
+        }
+        .neu-flat {
+            background: #e0e0e0;
+            box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+        }
+        .dark .neu-flat {
+            background: #1e1e1e;
+            box-shadow: 6px 6px 12px #121212, -6px -6px 12px #2a2a2a;
+        }
+        .neu-pressed {
+            background: #e0e0e0;
+            box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
+        }
+        .dark .neu-pressed {
+            background: #1e1e1e;
+            box-shadow: inset 4px 4px 8px #121212, inset -4px -4px 8px #2a2a2a;
+        }
+
+        /* Windows 11 Acrylic */
+        .acrylic-win {
+            background: rgba(243, 243, 243, 0.65);
+            backdrop-filter: blur(20px) saturate(125%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .dark .acrylic-win {
+            background: rgba(32, 32, 32, 0.75);
+            backdrop-filter: blur(20px) saturate(125%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Klasik Windows Form / 3D Retro Styles */
+        .win98-window {
+            background: #d4d0c8 !important;
+            box-shadow: 1px 1px 0px 0px #000000;
+        }
+        .win98-inset {
+            background: #ffffff;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+        .win98-outset {
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+        }
+        .win98-button {
+            background: #d4d0c8;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            outline: none;
+        }
+        .win98-button:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        /* Brutalism / Neo-Brutalism */
+        .brutal-card {
+            background: #fff;
+            border: 3px solid #000;
+            box-shadow: 5px 5px 0px 0px #000;
+        }
+        .dark .brutal-card {
+            background: #1e1e1e;
+            border: 3px solid #fff;
+            box-shadow: 5px 5px 0px 0px #fff;
+        }
+        .brutal-btn {
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0px 0px #000;
+            transition: all 0.1s ease;
+        }
+        .brutal-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px #000;
+        }
+
+        /* Claymorphism */
+        .clay-card {
+            background: #ffecf2;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.06), 
+                        inset -8px -8px 16px rgba(0,0,0,0.1), 
+                        inset 8px 8px 16px rgba(255,255,255,0.8);
+        }
+        .dark .clay-card {
+            background: #2d1b24;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.3), 
+                        inset -8px -8px 16px rgba(0,0,0,0.4), 
+                        inset 8px 8px 16px rgba(255,255,255,0.05);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200 antialiased overflow-hidden h-screen flex flex-col">
+
+    <!-- ÜST NAVİGASYON -->
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 py-3 flex justify-between items-center z-10 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-600 text-white p-2 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <i class="fa-solid fa-wand-magic-sparkles text-lg animate-pulse"></i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-base tracking-tight flex items-center gap-2">
+                    UI Design Lab v2.5 <span class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-xs px-2.5 py-0.5 rounded-full font-medium">19 Premium Stil</span>
+                </h1>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Her Stil İçin En Az 10 Aktif Form Bileşeni & Canlı Olay Günlüğü</p>
+            </div>
+        </div>
+
+        <!-- Kontroller -->
+        <div class="flex items-center space-x-3">
+            <button id="themeToggle" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-all" title="Koyu/Açık Tema">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:inline"></i>
+            </button>
+            <a href="#test" onclick="showStylesMatrix()" class="hidden md:flex items-center gap-1.5 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-semibold transition-all">
+                <i class="fa-solid fa-layer-group"></i> Karşılaştır
+            </a>
+        </div>
+    </header>
+
+    <!-- ANA ALAN -->
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- SOL MENÜ: TASARIM SEÇİCİ -->
+        <aside class="w-80 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shrink-0 overflow-y-auto">
+            <div class="p-4 border-b border-slate-100 dark:border-slate-800/60">
+                <span class="text-xs font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase">Tasarım Şablonları</span>
+            </div>
+            <nav id="stylesMenu" class="p-2 space-y-1 flex-1">
+                <!-- Javascript ile dinamik doldurulur -->
+            </nav>
+            <!-- Alt Canlı Etkinlik Kaydedici -->
+            <div class="p-4 border-t border-slate-150 dark:border-slate-800/60 bg-slate-50 dark:bg-slate-950/20">
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Canlı Form Olayları (Events)</span>
+                <div id="eventLog" class="h-24 bg-slate-900 text-emerald-400 rounded-lg p-2.5 font-mono text-[9px] overflow-y-auto space-y-1">
+                    <p class="text-slate-500">> Oyun alanı ve olay izleyici hazır.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ORTA / SAĞ DETAY: CANLI ÖNİZLEME -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-slate-100 dark:bg-slate-900/40 relative">
+            
+            <!-- STİL DETAYI VE ETİKETLERİ -->
+            <div class="px-6 py-4 border-b border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span id="activeStyleId" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs px-2.5 py-0.5 rounded-md font-mono">STIL-1</span>
+                        <h2 id="activeStyleName" class="text-xl font-bold tracking-tight">Glassmorphism</h2>
+                    </div>
+                    <p id="activeStyleDesc" class="text-sm text-slate-500 dark:text-slate-400 mt-1">Şeffaf, bulanık cam efektli paneller, yumuşak ışıklar</p>
+                </div>
+                <div class="flex items-center gap-2 self-start md:self-center">
+                    <span class="text-xs text-slate-400 dark:text-slate-500 font-medium">Uyumlu Alan:</span>
+                    <span id="activeStyleApp" class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold px-3 py-1.5 rounded-lg border border-indigo-100 dark:border-indigo-900/50">AI araç yöneticisi</span>
+                </div>
+            </div>
+
+            <!-- AKTİF TASARIM EKRANI VE KOD DETAYLARI -->
+            <div class="flex-1 flex flex-col xl:flex-row overflow-hidden">
+                
+                <!-- CANLI ÖNİZLEME ALANI -->
+                <div class="flex-1 p-6 overflow-y-auto flex items-center justify-center relative min-h-[400px]">
+                    <!-- Dinamik Arka Plan Süslemeleri -->
+                    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-400 dark:bg-purple-900/30 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse"></div>
+                        <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-400 dark:bg-blue-900/30 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                    </div>
+
+                    <!-- Tasarımın Render Edileceği Konteyner -->
+                    <div id="demoContainer" class="w-full max-w-5xl h-full flex items-center justify-center z-10 transition-all duration-300 overflow-y-auto p-4 max-h-[80vh]">
+                        <!-- Buraya Javascript ile seçili tasarımın UI HTML'i yerleştirilecek -->
+                    </div>
+                </div>
+
+                <!-- KOD / REHBER YAZI ALANI VE AI MD DOSYASI (Sağ Panel) -->
+                <div class="w-full xl:w-[480px] border-t xl:border-t-0 xl:border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shrink-0 overflow-hidden">
+                    
+                    <!-- SEKME BAŞLIKLARI -->
+                    <div class="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 shrink-0">
+                        <button id="tabBtnSecrets" onclick="switchRightTab('secrets')" class="flex-1 py-3 px-2 text-center font-bold text-xs border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-lightbulb"></i> Tasarım Sırları
+                        </button>
+                        <button id="tabBtnCustomize" onclick="switchRightTab('customize')" class="flex-1 py-3 px-2 text-center font-semibold text-xs border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white flex items-center justify-center gap-1.5 transition-all">
+                            <i class="fa-solid fa-sliders"></i> Canlı Ayarlar
+                        </button>
+                        <button id="tabBtnMd" onclick="switchRightTab('md')" class="flex-1 py-3 px-2 text-center font-semibold text-xs border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white flex items-center justify-center gap-1.5 transition-all">
+                            <i class="fa-solid fa-robot"></i> AI .MD Kuralı
+                        </button>
+                    </div>
+
+                    <!-- İÇERİK: TASARIM SIRLARI SEKME ALANI -->
+                    <div id="tabContentSecrets" class="flex-1 p-5 overflow-y-auto space-y-4 text-xs">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <h4 class="font-bold text-slate-700 dark:text-slate-300 text-[11px] uppercase">Temel CSS Sınıfları:</h4>
+                                <button onclick="copyCSS()" class="text-[11px] text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-copy"></i> Kopyala
+                                </button>
+                            </div>
+                            <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-200/60 dark:border-slate-800/50">
+                                <code id="cssClassesBlock" class="text-xs text-rose-600 dark:text-rose-400 break-all font-mono">background: rgba(...)</code>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-slate-700 dark:text-slate-300 text-[11px] uppercase mb-1">Tasarım İpuçları:</h4>
+                            <ul id="styleTips" class="space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside">
+                                <!-- İpuçları JS'ten yüklenecek -->
+                            </ul>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                            <h4 class="font-bold text-slate-700 dark:text-slate-300 text-[11px] uppercase mb-2">Bu Tasarımla Harika Giden Uygulamalar:</h4>
+                            <div id="useCasesContainer" class="flex flex-wrap gap-1.5">
+                                <!-- Önerilen uygulamalar etiketleri -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- İÇERİK: CANLI AYARLAR (Live Customizer) -->
+                    <div id="tabContentCustomize" class="flex-1 p-5 overflow-y-auto space-y-5 hidden text-xs">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block border-b pb-2">Arayüz Değişkenleri Sihirbazı</span>
+                        
+                        <div class="space-y-4">
+                            <!-- Vurgu Rengi Belirleme -->
+                            <div>
+                                <label class="block font-bold text-slate-600 dark:text-slate-400 mb-1.5">Arayüz Vurgu Rengi</label>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <button onclick="setThemeColor('indigo-600')" class="w-full h-8 bg-indigo-600 rounded-lg border-2 border-transparent focus:border-black dark:focus:border-white"></button>
+                                    <button onclick="setThemeColor('emerald-500')" class="w-full h-8 bg-emerald-500 rounded-lg border-2 border-transparent focus:border-black dark:focus:border-white"></button>
+                                    <button onclick="setThemeColor('rose-500')" class="w-full h-8 bg-rose-500 rounded-lg border-2 border-transparent focus:border-black dark:focus:border-white"></button>
+                                    <button onclick="setThemeColor('cyan-400')" class="w-full h-8 bg-cyan-400 rounded-lg border-2 border-transparent focus:border-black dark:focus:border-white"></button>
+                                    <button onclick="setThemeColor('amber-500')" class="w-full h-8 bg-amber-500 rounded-lg border-2 border-transparent focus:border-black dark:focus:border-white"></button>
+                                </div>
+                            </div>
+
+                            <!-- Köşe Yuvarlaklığı -->
+                            <div>
+                                <label class="block font-bold text-slate-600 dark:text-slate-400 mb-1">Köşe Yumuşaklığı (Border Radius)</label>
+                                <div class="flex items-center gap-3">
+                                    <input type="range" id="inputRadius" min="0" max="24" value="12" class="w-full accent-indigo-600 cursor-pointer h-1 bg-slate-200 dark:bg-slate-800 rounded-lg" oninput="updateCustomizer()">
+                                    <span id="labelRadius" class="font-mono font-bold">12px</span>
+                                </div>
+                            </div>
+
+                            <!-- Padding / Sıkışıklık Oranı -->
+                            <div>
+                                <label class="block font-bold text-slate-600 dark:text-slate-400 mb-1">İç Boşluk Seviyesi (Padding)</label>
+                                <div class="flex items-center gap-3">
+                                    <input type="range" id="inputPadding" min="8" max="32" value="20" class="w-full accent-indigo-600 cursor-pointer h-1 bg-slate-200 dark:bg-slate-800 rounded-lg" oninput="updateCustomizer()">
+                                    <span id="labelPadding" class="font-mono font-bold">20px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-50 dark:bg-indigo-950/30 p-3 rounded-xl border border-indigo-100 dark:border-indigo-900/50 text-[11px] text-indigo-800 dark:text-indigo-300">
+                            <i class="fa-solid fa-sync animate-spin mr-1"></i>
+                            Yaptığınız tüm değişiklikler anında canlı önizleme bileşenine ve AI Markdown kural listesine aktarılmaktadır.
+                        </div>
+                    </div>
+
+                    <!-- İÇERİK: AI MD KURAL DOSYASI SEKME ALANI -->
+                    <div id="tabContentMd" class="flex-1 p-5 overflow-hidden flex flex-col space-y-3 hidden">
+                        <div class="flex justify-between items-center shrink-0">
+                            <div>
+                                <h4 class="font-bold text-slate-700 dark:text-slate-300 text-xs">AI Geliştirici Kural Dosyası (.md)</h4>
+                                <p class="text-[10px] text-slate-400">Claude veya Cursor araçlarına doğrudan kuralları aktarın.</p>
+                            </div>
+                            <button onclick="copyMdRules()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-[10px] flex items-center gap-1.5 shadow-sm transition-all">
+                                <i class="fa-solid fa-copy"></i> Kuralları Kopyala
+                            </button>
+                        </div>
+                        
+                        <div class="flex-1 overflow-y-auto bg-slate-900 text-slate-300 p-4 rounded-xl border border-slate-800 font-mono text-[11px] leading-relaxed relative">
+                            <pre id="mdRulesCodeBlock" class="whitespace-pre-wrap select-all">Sistem kuralları yükleniyor...</pre>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- TÜM TASARIMLARI BİR ARADA GÖSTEREN KARŞILAŞTIRMA MODAL'I -->
+    <div id="matrixModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-8 hidden">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-7xl h-full max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-950/50">
+                <div>
+                    <h3 class="text-lg font-bold">19 Tasarım Stili Matrisi</h3>
+                    <p class="text-xs text-slate-500">Tüm yeni eklenen stillerin hızlı özeti.</p>
+                </div>
+                <button onclick="hideStylesMatrix()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-xl transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="matrixGrid">
+                    <!-- Javascript dinamik olarak dolduracak -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST BILDIRIMI -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-4 py-2.5 rounded-xl text-xs font-semibold shadow-lg translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-green-500"></i>
+        <span id="toastMessage">Başarıyla kopyalandı!</span>
+    </div>
+
+    <script>
+        // TASARIM VERİLERİ (19 TANE - Her biri en az 10 farklı aktif form elemanı barındıracak şekilde tamamen genişletildi)
+        const designStyles = [
+            {
+                id: 1,
+                name: "Glassmorphism",
+                desc: "Şeffaf, bulanık cam efektli paneller, yumuşak arkadan sızan ışıklar.",
+                app: "AI araç yöneticisi, dashboard, repo analiz aracı",
+                icon: "fa-solid fa-wand-magic-sparkles",
+                classes: "bg-white/10 dark:bg-slate-900/50 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-2xl rounded-3xl",
+                tips: [
+                    "Arka planda parlak gradyanlar kullanın ki bulanıklık (backdrop-filter: blur) net hissedilsin.",
+                    "Sınırları belirginleştirmek için %15-20 opaklıklı beyaz kenarlıkler (border) ekleyin.",
+                    "Metinler için yüksek kontrastlı beyaz renkleri tercih edin."
+                ],
+                useCases: ["AI Dashboard", "SaaS Analytics", "Kripto Cüzdan", "Hava Durumu Prototipi"],
+                html: `
+                <div class="w-full max-w-xl p-6 rounded-[var(--custom-radius)] text-white glass-panel relative overflow-hidden shadow-2xl transition-all" style="padding: var(--custom-padding);">
+                    <div class="absolute -top-10 -right-10 w-28 h-28 bg-[var(--accent-color,theme(colors.pink.500))] rounded-full blur-2xl opacity-40"></div>
+
+                    <div class="relative z-10 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-[10px] bg-white/20 text-white px-2 py-0.5 rounded-full border border-white/20">Modül #1: Kurulum</span>
+                                <h3 class="text-base font-bold mt-1 text-white">Smart Agent Panel</h3>
+                            </div>
+                            <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold">Aktif</span>
+                        </div>
+
+                        <!-- 10+ Farklı Eleman İçeren Form -->
+                        <div class="space-y-3 text-white text-xs">
+                            <!-- 1. Text Input -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-300 uppercase">Ajan İsmi (Input)</label>
+                                <input type="text" id="g_agent_name" class="w-full px-3 py-1.5 rounded-xl text-xs glass-input placeholder-white/30" placeholder="Örn: Codex_Alpha_v2">
+                            </div>
+
+                            <!-- 2. Select -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-300 uppercase">Ajan Modeli (Select)</label>
+                                <select id="g_agent_model" class="w-full px-3 py-1.5 rounded-xl text-xs glass-input bg-slate-900/60">
+                                    <option value="gemini">Gemini 2.5 Flash</option>
+                                    <option value="deepseek">DeepSeek R1</option>
+                                    <option value="claude">Claude 3.5 Sonnet</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <!-- 3. Slider (Range) -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-300 uppercase">Yaratıcılık (Slider): <span id="g_tempVal" class="text-pink-300">0.7</span></label>
+                                    <input type="range" id="g_temp" min="0" max="1" step="0.1" value="0.7" class="w-full accent-white bg-white/10 rounded-lg cursor-pointer">
+                                </div>
+                                <!-- 4. Multi-Select/Dropdown 2 -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-300 uppercase">Bellek Tipi (Select)</label>
+                                    <select id="g_memory" class="w-full px-3 py-1.5 rounded-xl text-xs glass-input bg-slate-900/60">
+                                        <option>Kısa Vadeli (Context)</option>
+                                        <option>Vektör Veritabanı</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 5. Checkbox & 6. Radio Grupları -->
+                            <div class="grid grid-cols-2 gap-3 bg-white/5 p-2 rounded-xl border border-white/10">
+                                <div class="space-y-1">
+                                    <span class="block text-[9px] font-bold text-slate-300 uppercase">Onaylar (Checkboxes)</span>
+                                    <label class="flex items-center gap-1.5 text-[11px] cursor-pointer">
+                                        <input type="checkbox" id="g_grounding" checked class="rounded accent-indigo-500 bg-white/10">
+                                        <span>Web Search</span>
+                                    </label>
+                                </div>
+                                <div class="space-y-1">
+                                    <span class="block text-[9px] font-bold text-slate-300 uppercase">Yanıt Biçimi (Radios)</span>
+                                    <div class="flex flex-col gap-1 text-[11px]">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" id="g_format_json" name="g_format" checked class="accent-indigo-500">
+                                            <span>JSON format</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 7. Textarea -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-300 uppercase">Açıklama (Textarea)</label>
+                                <textarea id="g_description" rows="2" class="w-full px-3 py-1.5 rounded-xl text-xs glass-input placeholder-white/30" placeholder="Ajan yönergelerini buraya yazın..."></textarea>
+                            </div>
+
+                            <!-- 8. Progress Bar -->
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-[9px] text-slate-300">
+                                    <span>Bellek Tüketimi (Progress)</span>
+                                    <span>64%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                    <div class="w-[64%] h-full bg-pink-400"></div>
+                                </div>
+                            </div>
+
+                            <!-- 9. Liste / Tablo Elemanı -->
+                            <div class="bg-white/5 p-2 rounded-xl border border-white/10 max-h-20 overflow-y-auto space-y-1 text-[10px]">
+                                <div class="flex justify-between border-b border-white/5 pb-1">
+                                    <span>Sistem Logu:</span>
+                                    <span class="text-emerald-400 font-mono">Çalışıyor</span>
+                                </div>
+                                <div class="font-mono text-[9px] text-slate-300">Ajan başlatma parametreleri doğrulandı.</div>
+                            </div>
+                        </div>
+
+                        <!-- 10. Düğmeler (Buttons) -->
+                        <div class="flex gap-2 pt-1">
+                            <button id="g_btn_start" class="flex-1 py-2 bg-white text-slate-900 font-bold text-xs rounded-xl hover:bg-slate-100 transition-all">
+                                Ajanı Başlat
+                            </button>
+                            <button id="g_btn_test" class="px-3 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs rounded-xl">
+                                Test Et
+                            </button>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 2,
+                name: "Dark Developer UI",
+                desc: "Siyah/koyu gri zemin, neon renk vurguları, monospaced fontlar ve terminal havası.",
+                app: "Kodlama araçları, Claude/Codex yönetici app",
+                icon: "fa-solid fa-code",
+                classes: "bg-neutral-950 text-emerald-400 font-mono border border-neutral-800 shadow-emerald-900/10 rounded-xl",
+                tips: [
+                    "Koyu gri zemin tonları (#0a0a0a veya #121212) göz yormaz.",
+                    "Form elemanlarının kenarlıklarını aktif olduklarında parlayan neon tonlara büründürün.",
+                    "Metin kutuları içine monospaced yazı tipi ailesini uygulayın."
+                ],
+                useCases: ["Geliştirici Konsolları", "CLI Arayüzleri", "Veri Analizi", "API Monitorleri"],
+                html: `
+                <div class="w-full max-w-xl bg-black rounded-[var(--custom-radius)] border border-neutral-800 font-mono text-xs overflow-hidden shadow-2xl text-left" style="padding: var(--custom-padding);">
+                    <!-- 1. Başlık Barı / Durum Rozeti -->
+                    <div class="flex justify-between items-center mb-4 border-b border-neutral-800 pb-2">
+                        <span class="text-neutral-400 font-bold">>>> system_compiler.sh</span>
+                        <span id="d_status" class="text-emerald-500 animate-pulse">● LIVE</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- 2. Text Input -->
+                        <div>
+                            <label class="block text-[9px] text-emerald-500 uppercase tracking-widest mb-1">1. Çalıştırma Parametresi (Input)</label>
+                            <input type="text" id="d_cmd" class="w-full bg-neutral-900 border border-neutral-800 text-emerald-400 py-1.5 px-3 rounded-lg outline-none focus:border-emerald-500" value="python3 -m core_runner --epochs=150">
+                        </div>
+
+                        <!-- 3. Select 1 & 4. Select 2 -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[9px] text-neutral-400 uppercase mb-1">Derleyici Sürümü (Select)</label>
+                                <select id="d_compiler" class="w-full bg-neutral-900 border border-neutral-800 text-emerald-400 py-1.5 px-2 rounded-lg outline-none">
+                                    <option>GCC v12.2.0</option>
+                                    <option>Clang v15.0</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-neutral-400 uppercase mb-1">Optimizasyon Derecesi</label>
+                                <select id="d_opt" class="w-full bg-neutral-900 border border-neutral-800 text-emerald-400 py-1.5 px-2 rounded-lg outline-none">
+                                    <option>-O3 (Maksimum Hız)</option>
+                                    <option>-O0 (Hata Ayıklama)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 5. Slider (Range) -->
+                        <div>
+                            <label class="block text-[9px] text-neutral-400 uppercase mb-1">Maksimum Bellek Limiti (Slider): <span id="d_memLimitVal">75</span>%</label>
+                            <div class="flex items-center gap-3 bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1">
+                                <input type="range" id="d_memLimit" class="w-full accent-emerald-500 bg-neutral-800 cursor-pointer" min="10" max="100" value="75">
+                            </div>
+                        </div>
+
+                        <!-- 6. Checkbox & 7. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 bg-neutral-950 p-2 border border-neutral-900 rounded-lg">
+                            <div class="space-y-1">
+                                <label class="flex items-center gap-1.5 text-[10px] text-neutral-400 cursor-pointer">
+                                    <input type="checkbox" id="d_verbose" checked class="accent-emerald-500">
+                                    <span>Verbose Log</span>
+                                </label>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex flex-col gap-1 text-[10px] text-neutral-400">
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="radio" id="d_stream_live" name="d_stream" checked class="accent-emerald-500">
+                                        <span>Canlı Akış</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 8. Textarea -->
+                        <div>
+                            <label class="block text-[9px] text-neutral-400 uppercase mb-1">Derleme Öncesi Betik (Pre-build Script)</label>
+                            <textarea id="d_script" rows="2" class="w-full bg-neutral-900 border border-neutral-800 text-emerald-400 p-2 rounded-lg outline-none focus:border-emerald-500 font-mono text-[11px]">export CUDA_VISIBLE_DEVICES=0,1</textarea>
+                        </div>
+
+                        <!-- 9. Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[8px] text-neutral-500">
+                                <span>Derleme Durumu (Progress)</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+                                <div class="w-[85%] h-full bg-emerald-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- 10. Terminal Çıktı Tablosu / Listesi -->
+                        <div class="bg-neutral-950 border border-neutral-900 p-2 rounded-lg text-[10px] space-y-1 max-h-20 overflow-y-auto">
+                            <div class="flex justify-between border-b border-neutral-900 pb-1">
+                                <span class="text-neutral-500">GÖREV</span>
+                                <span class="text-neutral-500">DURUM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Docker Container build</span>
+                                <span class="text-emerald-400">Tamamlandı</span>
+                            </div>
+                        </div>
+
+                        <!-- 11. Buttons -->
+                        <div class="flex gap-2 justify-end pt-1">
+                            <button id="d_btn_abort" class="px-3 py-1.5 border border-neutral-800 text-neutral-400 hover:text-white rounded-lg transition-all hover:bg-neutral-900">
+                                İptal Et
+                            </button>
+                            <button id="d_btn_run" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg transition-all shadow-md">
+                                Derle & Çalıştır
+                            </button>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 3,
+                name: "Minimal Sidebar UI",
+                desc: "Solda ince/sade bir gezinme menüsü, sağda kartlı geniş içerik alanı.",
+                app: "Budget tracker, subscription tracker, dosya yöneticisi",
+                icon: "fa-solid fa-grip-vertical",
+                classes: "bg-slate-50 dark:bg-slate-900 text-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl",
+                tips: [
+                    "Arayüzün solunu dar bir navigasyon barı, sağını ise temiz kartlı form alanları şeklinde yapılandırın.",
+                    "Form elementlerinin etrafında geniş beyaz boşluklar kullanarak sadelik yakalayın."
+                ],
+                useCases: ["Bütçe Takibi", "Kişisel Kütüphane", "Abonelik Yönetimi", "Bulut Dosya Depolama"],
+                html: `
+                <div class="w-full max-w-3xl bg-white dark:bg-slate-950 rounded-[var(--custom-radius)] shadow-xl flex border border-slate-200/80 dark:border-slate-800 overflow-hidden h-[390px] text-left">
+                    <!-- 1. Sol Sidebar Listesi -->
+                    <div class="w-44 bg-slate-50 dark:bg-slate-900/60 p-4 border-r border-slate-200/60 dark:border-slate-800 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2 px-1">
+                                <div class="w-6 h-6 rounded bg-indigo-600 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-wallet"></i></div>
+                                <span class="font-bold text-xs">Pockety Wallet</span>
+                            </div>
+                            <nav class="space-y-1 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                                <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"><i class="fa-solid fa-plus-circle"></i> Ekle</a>
+                                <a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-list-check"></i> Rapor</a>
+                            </nav>
+                        </div>
+                        <span id="s_status_badge" class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-[9px] px-2 py-0.5 rounded font-bold text-center">Premium</span>
+                    </div>
+
+                    <!-- Sağ Form Alanı -->
+                    <div class="flex-1 p-6 overflow-y-auto bg-white dark:bg-slate-950 flex flex-col justify-between" style="padding: var(--custom-padding);">
+                        <div class="space-y-3.5">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase">Hızlı Gider Giriş Formu</h3>
+                            
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <!-- 2. Text Input -->
+                                <div>
+                                    <label class="block text-[10px] font-semibold text-slate-400 mb-1">Miktar ($)</label>
+                                    <input type="number" id="s_amount" class="w-full px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg outline-none bg-transparent" value="150.00">
+                                </div>
+                                <!-- 3. Select -->
+                                <div>
+                                    <label class="block text-[10px] font-semibold text-slate-400 mb-1">Kategori</label>
+                                    <select id="s_category" class="w-full px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg outline-none bg-transparent">
+                                        <option>Yazılım & SaaS</option>
+                                        <option>Market & Gıda</option>
+                                        <option>Kira & Faturalar</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <!-- 4. Slider -->
+                                <div>
+                                    <label class="block text-[10px] font-semibold text-slate-400 mb-1">Harcama Limiti: <span id="s_limitVal">500</span>$</label>
+                                    <input type="range" id="s_limit" class="w-full accent-indigo-600 cursor-pointer h-1" min="100" max="1000" value="500">
+                                </div>
+                                <!-- 5. Select 2 -->
+                                <div>
+                                    <label class="block text-[10px] font-semibold text-slate-400 mb-1">Ödeme Yöntemi</label>
+                                    <select id="s_payment" class="w-full px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg outline-none bg-transparent">
+                                        <option>Kredi Kartı</option>
+                                        <option>Havale/EFT</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 6. Checkbox & 7. Radio Grupları -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer">
+                                    <input type="checkbox" id="s_repeat" checked class="w-4 h-4 rounded text-indigo-600 border-slate-200">
+                                    <span>Yinelenen Gider</span>
+                                </label>
+                                <div class="flex flex-col gap-1 text-[11px] text-slate-600 dark:text-slate-400">
+                                    <label class="flex items-center gap-1 cursor-pointer">
+                                        <input type="radio" id="s_prio_high" name="s_prio" checked class="accent-indigo-600">
+                                        <span>Yüksek Öncelik</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 8. Textarea -->
+                            <div>
+                                <label class="block text-[10px] font-semibold text-slate-400 mb-1">Özel Açıklama (Not)</label>
+                                <textarea id="s_notes" rows="1" class="w-full px-3 py-1 border border-slate-200 dark:border-slate-800 rounded-lg text-xs outline-none bg-transparent" placeholder="Ödeme detaylarını yazın..."></textarea>
+                            </div>
+
+                            <!-- 9. Progress Bar -->
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-[9px] text-slate-400">
+                                    <span>Aylık Bütçe Kullanımı</span>
+                                    <span>30%</span>
+                                </div>
+                                <div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="w-[30%] h-full bg-indigo-600"></div>
+                                </div>
+                            </div>
+
+                            <!-- 10. Son Hareketler Listesi / Tablo -->
+                            <div class="border border-slate-100 dark:border-slate-800 rounded-lg p-1.5 text-[10px] text-slate-500 max-h-16 overflow-y-auto">
+                                <div class="flex justify-between border-b pb-0.5 mb-0.5 font-bold">
+                                    <span>İşlem</span>
+                                    <span>Miktar</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Netflix Premium</span>
+                                    <span class="font-bold text-slate-800 dark:text-white">$15.99</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 11. Buttons -->
+                        <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-900 shrink-0">
+                            <button id="s_btn_submit" class="flex-1 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl">Kaydet</button>
+                            <button id="s_btn_reset" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs rounded-xl">Vazgeç</button>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 4,
+                name: "Command Palette UI",
+                desc: "Arama odaklı, klavye kısayollarıyla (Ctrl+K) tetiklenen arama ve aksiyon odaklı pencereler.",
+                app: "Rule manager, AI tool launcher, repo cleaner",
+                icon: "fa-solid fa-keyboard",
+                classes: "bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800",
+                tips: [
+                    "Kullanıcıya tek satırlık güçlü bir arama kutusu sunun ve ilk odak noktası burası olsun."
+                ],
+                useCases: ["Araç Başlatıcılar", "Ayarlar Konsolları", "Kural/Filtre Yöneticileri"],
+                html: `
+                <div class="w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-800 overflow-hidden text-left">
+                    <!-- 1. Arama Girişi (Input) -->
+                    <div class="p-4 border-b border-slate-150 dark:border-slate-800 flex items-center gap-3">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
+                        <input type="text" id="cp_search" placeholder="Arama yapın..." class="bg-transparent border-none outline-none text-xs w-full text-slate-800 dark:text-slate-100" value="Kural ekle...">
+                    </div>
+
+                    <div class="p-4 space-y-4">
+                        <!-- 10+ Farklı Eleman İçeren Konfigürasyon Bölümü -->
+                        <div class="grid grid-cols-2 gap-3 text-xs text-slate-600 dark:text-slate-300">
+                            <!-- 2. Select -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase">Arama Alanı</label>
+                                <select id="cp_scope" class="w-full p-1.5 border dark:border-slate-800 rounded bg-transparent">
+                                    <option>Tüm Projeler</option>
+                                    <option>Sadece Aktif Klasör</option>
+                                </select>
+                            </div>
+                            <!-- 3. Range Slider -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase">Tarama Derinliği: <span id="cp_depthVal">3</span></label>
+                                <input type="range" id="cp_depth" min="1" max="10" value="3" class="w-full accent-indigo-600 h-1 mt-2">
+                            </div>
+                        </div>
+
+                        <!-- 4. Checkbox & 5. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-lg border border-slate-100 dark:border-slate-900 text-xs">
+                            <div>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="cp_regex" checked class="rounded accent-indigo-600">
+                                    <span>Regex Eşleştirme</span>
+                                </label>
+                            </div>
+                            <div class="flex flex-col gap-1 text-[11px]">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="radio" id="cp_match_case" name="cp_match" checked class="accent-indigo-600">
+                                    <span>Büyük/Küçük Duyarlı</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 6. Textarea -->
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Eşleşen Kurallar Şablonu</label>
+                            <textarea id="cp_template" rows="2" class="w-full p-2 border dark:border-slate-800 rounded bg-transparent text-xs" placeholder="Regex formülünü buraya yazın..."></textarea>
+                        </div>
+
+                        <!-- 7. Select 2 -->
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase">Çıktı Biçimi</label>
+                                <select id="cp_output" class="w-full p-1.5 border dark:border-slate-800 rounded bg-transparent">
+                                    <option>JSON Formatı</option>
+                                    <option>Metin Logu</option>
+                                </select>
+                            </div>
+                            <!-- 8. Progress Bar -->
+                            <div class="space-y-1">
+                                <span class="block text-[10px] font-bold text-slate-400 uppercase">İşlem Tamamlanma</span>
+                                <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-2">
+                                    <div class="w-[45%] h-full bg-indigo-600"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Liste / Tablo Elemanı -->
+                        <div class="border border-slate-100 dark:border-slate-800 rounded-lg p-2 text-[10px] text-slate-500 space-y-1 max-h-16 overflow-y-auto bg-slate-50/50 dark:bg-slate-950/20">
+                            <div class="flex justify-between border-b pb-1">
+                                <span>Kurallar / Dosyalar</span>
+                                <span class="text-indigo-600 font-bold">Uygula</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>clean_repo_rules.yaml</span>
+                                <span class="text-slate-400">Ctrl+Alt+C</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 10. Buttons & 11. Status Badge -->
+                    <div class="p-3 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
+                        <span id="cp_badge" class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 px-2 py-0.5 rounded text-[10px] font-bold font-mono">Modül: Hazır</span>
+                        <div class="flex gap-2">
+                            <button id="cp_btn_close" class="px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-400">Kapat</button>
+                            <button id="cp_btn_exec" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold">Kuralı Çalıştır</button>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 5,
+                name: "Card Dashboard UI",
+                desc: "İstatistik kartları, ufak grafik çizgileri, son işlemler ve hızlı aksiyon butonları.",
+                app: "Bütçe, abonelik, GitHub repo organizer",
+                icon: "fa-solid fa-chart-simple",
+                classes: "grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl",
+                tips: [
+                    "Çeşitli metrikleri bağımsız form-veri kartlarına ayırın ve her kartta tek tip veri seti sunun."
+                ],
+                useCases: ["Satış İzleme Paneli", "Proje Sağlık Monitörü", "Kişisel KPI Takibi"],
+                html: `
+                <div class="w-full max-w-2xl bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left space-y-4 shadow-lg">
+                    <!-- 1. Header & 2. Select -->
+                    <div class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase block">Modül Kontrol Grubu</span>
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-white">KPI Veri Dashboard</h3>
+                        </div>
+                        <select id="db_period" class="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[10px] rounded-lg outline-none text-slate-600">
+                            <option>Son 24 Saat</option>
+                            <option>Son 7 Gün</option>
+                        </select>
+                    </div>
+
+                    <!-- 10+ Bileşenli Grid Kartları -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <!-- Kart 1 -->
+                        <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-800 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] text-slate-400 uppercase">AI Bellek Sınırı</span>
+                                <!-- 3. Status Badge -->
+                                <span id="db_limit_badge" class="bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-[9px] px-1.5 py-0.5 rounded font-bold">%80 Sınırı</span>
+                            </div>
+                            
+                            <!-- 4. Text Input -->
+                            <div>
+                                <label class="block text-[9px] text-slate-400 mb-1 uppercase">Dizin Yolu (Input)</label>
+                                <input type="text" id="db_path" class="w-full p-1.5 border dark:border-slate-800 rounded bg-transparent" value="/var/ai_model/weights">
+                            </div>
+
+                            <!-- 5. Range Slider -->
+                            <div>
+                                <label class="block text-[9px] text-slate-400 uppercase mb-1">Bellek Uyarı Sınırı: <span id="db_limitVal">80</span>%</label>
+                                <input type="range" id="db_limit" class="w-full accent-blue-500 bg-slate-200 dark:bg-slate-800 rounded-lg h-1" min="50" max="100" value="80">
+                            </div>
+                        </div>
+
+                        <!-- Kart 2 -->
+                        <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-800 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] text-slate-400 uppercase">Model Kodu</span>
+                                <!-- 6. Dropdown 2 -->
+                                <select id="db_engine" class="p-1 bg-transparent border rounded text-[10px] text-slate-500">
+                                    <option>GPT-4o-mini</option>
+                                    <option>DeepSeek-Coder</option>
+                                </select>
+                            </div>
+
+                            <!-- 7. Checkbox & 8. Radio Grupları -->
+                            <div class="space-y-1.5 bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-100 dark:border-slate-800 text-[10px]">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="db_compress" checked class="accent-blue-500">
+                                    <span>Girdi Paketlerini Sıkıştır</span>
+                                </label>
+                                <div class="flex gap-3 mt-1.5">
+                                    <label class="flex items-center gap-1 cursor-pointer">
+                                        <input type="radio" id="db_mode_live" name="db_mode" checked class="accent-blue-500">
+                                        <span>Canlı</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 9. Metin Alanı (Textarea) -->
+                            <div>
+                                <label class="block text-[9px] text-slate-400 uppercase mb-1">Sistem Uyarısı Log Mesajı</label>
+                                <textarea id="db_log_msg" rows="1" class="w-full p-1 border dark:border-slate-800 rounded bg-transparent text-[10px]" placeholder="Örn: Limit aşıldı!"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 10. Progress Bar -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[9px] text-slate-400">
+                            <span>Sistem Genel Kaynak Kullanımı (Progress)</span>
+                            <span>62%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="w-[62%] h-full bg-blue-500"></div>
+                        </div>
+                    </div>
+
+                    <!-- 11. Buttons -->
+                    <div class="flex justify-end gap-2 pt-2 border-t">
+                        <button id="db_btn_reset" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs rounded-xl">Parametreleri Sıfırla</button>
+                        <button id="db_btn_submit" class="px-4 py-1.5 bg-blue-500 text-white font-bold text-xs rounded-xl shadow-md">Metrikleri Kaydet</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 6,
+                name: "Neumorphism",
+                desc: "Kabartmalı, dışa ve içe doğru bükülen yumuşak gölge efektli butonlar ve kontrol panelleri.",
+                app: "Kişisel not, küçük araçlar, sade yardımcı uygulamalar",
+                icon: "fa-solid fa-bezier-curve",
+                classes: "bg-[#e0e0e0] dark:bg-[#1e1e1e] text-slate-700 dark:text-slate-300 shadow-lg p-6 rounded-3xl",
+                tips: [
+                    "Tüm form elemanlarının arka plan rengini zeminle birebir aynı tutun.",
+                    "Aktif olmayan elemanları dışa bükük (neu-flat), aktif girdi alanlarını veya basılmış tuşları ise içe göçük (neu-pressed) yapın."
+                ],
+                useCases: ["Hesap Makineleri", "Müzik Çalarlar", "Akıllı Saat UI"],
+                html: `
+                <div class="w-full max-w-md p-6 neu-flat rounded-[var(--custom-radius)] text-slate-700 dark:text-slate-300 text-left font-sans space-y-4" style="padding: var(--custom-padding);">
+                    <div class="flex justify-between items-center border-b border-slate-300 dark:border-neutral-800 pb-2">
+                        <span class="text-[10px] font-extrabold tracking-widest text-slate-400 block">NEUMORPHIC COMPONENT SETUP</span>
+                        <span id="n_badge" class="bg-[#d0d0d0] dark:bg-[#252525] text-[9px] px-2 py-0.5 rounded font-bold shadow-inner">V1.2</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <!-- 1. Text Input (Pressed) -->
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Parametre Adı</label>
+                                <input type="text" id="n_param" class="w-full px-3 py-1.5 neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] text-xs outline-none rounded-xl" value="Main_Engine_X">
+                            </div>
+                            <!-- 2. Select (Pressed) -->
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Örnekleme</label>
+                                <select id="n_sampling" class="w-full px-3 py-1.5 neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] text-xs outline-none rounded-xl">
+                                    <option>Real-Time</option>
+                                    <option>Simulated</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 3. Slider (Pressed) -->
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Akış Debisi (Slider): <span id="n_flowVal">60</span>%</label>
+                            <div class="neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] p-2.5 rounded-xl flex items-center">
+                                <input type="range" id="n_flow" class="w-full accent-indigo-500 cursor-pointer h-1 bg-slate-300 dark:bg-slate-800 rounded-lg" min="10" max="100" value="60">
+                            </div>
+                        </div>
+
+                        <!-- 4. Checkbox & 5. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] p-2.5 rounded-xl">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="n_compress" checked class="accent-indigo-500">
+                                    <span>Compress veri</span>
+                                </label>
+                            </div>
+                            <div class="neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] p-2.5 rounded-xl flex flex-col gap-1">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="radio" id="n_mode_prod" name="n_mode" checked class="accent-indigo-500">
+                                    <span>Üretim Modu</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 6. Dropdown 2 -->
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Arabellek Boyutu</label>
+                            <select id="n_buffer" class="w-full px-3 py-1.5 neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] text-xs outline-none rounded-xl">
+                                <option>512 KB</option>
+                                <option>1024 KB</option>
+                            </select>
+                        </div>
+
+                        <!-- 7. Textarea (Pressed) -->
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Sensör Komutları (Textarea)</label>
+                            <textarea id="n_cmds" rows="1" class="w-full px-3 py-1.5 neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] text-xs outline-none rounded-xl" placeholder="Ayar komutlarını buraya girin..."></textarea>
+                        </div>
+
+                        <!-- 8. Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[8px] text-slate-400">
+                                <span>Veri Aktarım Oranı (Progress)</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="w-full h-2 neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] rounded-full overflow-hidden p-0.5">
+                                <div class="w-[45%] h-full bg-indigo-500 rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Liste / Tablo Elemanı -->
+                        <div class="neu-pressed bg-[#e0e0e0] dark:bg-[#1e1e1e] p-2 rounded-xl text-[10px] text-slate-500 max-h-16 overflow-y-auto">
+                            <div class="flex justify-between border-b border-slate-350 dark:border-neutral-800 pb-1 font-bold">
+                                <span>Aktif Sensör</span>
+                                <span>Durum</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Core_X9</span>
+                                <span class="text-indigo-500 font-bold">Bağlı</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 10. Buttons -->
+                    <div class="grid grid-cols-2 gap-4 pt-2">
+                        <button id="n_btn_submit" class="w-full py-2 rounded-xl neu-flat bg-[#e0e0e0] dark:bg-[#1e1e1e] text-xs font-bold text-indigo-500 dark:text-indigo-400">
+                            Değerleri Gönder
+                        </button>
+                        <button id="n_btn_reset" class="w-full py-2 rounded-xl neu-flat bg-[#e0e0e0] dark:bg-[#1e1e1e] text-xs text-slate-500">
+                            Sıfırla
+                        </button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 7,
+                name: "Fluent Design / Win11 UI",
+                desc: "Yuvarlatılmış köşeler, yarı geçirgen pürüzsüz akrilik dokusu ve şık Windows kenarlıkları.",
+                app: "VB.NET / WPF / WinUI masaüstü uygulamaları",
+                icon: "fa-brands fa-windows",
+                classes: "acrylic-win shadow-2xl border text-left overflow-hidden rounded-xl",
+                tips: [
+                    "Form elementleri için her zaman ince, yuvarlatılmış (rounded-lg) sınırlar kullanın.",
+                    "Seçilen girdilere ve odaklanılan butonlara Windows 11 mavisi renginde ince bir alt vurgu çizgisi uygulayın."
+                ],
+                useCases: ["WinUI Masaüstü Simülatörleri", "Windows Kontrol Panelleri"],
+                html: `
+                <div class="w-full max-w-xl rounded-xl acrylic-win shadow-2xl border text-left overflow-hidden text-slate-800 dark:text-slate-100">
+                    <!-- 1. Pencere Başlık Barı / 2. Status Badge -->
+                    <div class="px-4 py-2 flex justify-between items-center border-b border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02]">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-brands fa-windows text-[#0078d4]"></i>
+                            <span class="text-xs font-semibold">Windows Update Kontrol Paneli</span>
+                        </div>
+                        <span id="fl_status" class="bg-[#e2f0fc] dark:bg-indigo-950 text-[#0078d4] text-[9px] px-2 py-0.5 rounded font-bold">Koruma: Aktif</span>
+                    </div>
+
+                    <!-- Fluent Form Elemanları -->
+                    <div class="p-6 space-y-4">
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <!-- 3. Text Input -->
+                            <div>
+                                <label class="block text-[11px] text-slate-500 mb-1">Sunucu Adresi (Input)</label>
+                                <input type="text" id="fl_server" value="https://update.microsoft.corp" class="w-full px-3 py-1.5 bg-white/60 dark:bg-black/40 border border-black/15 dark:border-white/15 rounded-lg text-xs outline-none focus:border-b-2 focus:border-b-[#0078d4] transition-all">
+                            </div>
+                            <!-- 4. Select -->
+                            <div>
+                                <label class="block text-[11px] text-slate-500 mb-1">Yükleme Sıklığı (Select)</label>
+                                <select id="fl_freq" class="w-full px-3 py-1.5 bg-white/60 dark:bg-black/40 border border-black/15 dark:border-white/15 rounded-lg text-xs outline-none focus:border-b-2 focus:border-b-[#0078d4] transition-all">
+                                    <option>Her Gün Saat 03:00</option>
+                                    <option>Manuel Denetleme</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 5. Slider (Range) -->
+                        <div>
+                            <label class="block text-[11px] text-slate-500 mb-1">Kota Sınırı: <span id="fl_quotaVal">20</span> GB</label>
+                            <input type="range" id="fl_quota" class="w-full accent-[#0078d4] bg-slate-200 dark:bg-slate-800 rounded-lg h-1 cursor-pointer" min="5" max="100" value="20">
+                        </div>
+
+                        <!-- 6. Checkbox & 7. Toggle (Switch) -->
+                        <div class="bg-white/30 dark:bg-white/[0.02] p-3 rounded-xl border border-black/5 dark:border-white/5 grid grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" id="fl_metered" checked class="rounded accent-[#0078d4]">
+                                    <span>Tarifeli Bağlantılar</span>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px]">Otomatik Yeniden Başlat</span>
+                                <input type="checkbox" id="fl_reboot" class="rounded accent-[#0078d4]">
+                            </div>
+                        </div>
+
+                        <!-- 8. Dropdown 2 -->
+                        <div>
+                            <label class="block text-[11px] text-slate-500 mb-1">İndirme Hız Limiti</label>
+                            <select id="fl_speed" class="w-full px-3 py-1.5 bg-white/60 dark:bg-black/40 border border-black/15 dark:border-white/15 rounded-lg text-xs outline-none">
+                                <option>Sınırsız (Maksimum)</option>
+                                <option>10 Mbps (Kısıtlı)</option>
+                            </select>
+                        </div>
+
+                        <!-- 9. Textarea -->
+                        <div>
+                            <label class="block text-[11px] text-slate-500 mb-1">Kurulum Öncesi İkaz Notu</label>
+                            <textarea id="fl_note" rows="1" class="w-full px-3 py-1.5 bg-white/60 dark:bg-black/40 border border-black/15 dark:border-white/15 rounded-lg text-xs outline-none" placeholder="Güncelleme notlarını yazın..."></textarea>
+                        </div>
+
+                        <!-- 10. Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[9px] text-slate-400">
+                                <span>İndirme İlerlemesi (Progress)</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[78%] h-full bg-[#0078d4]"></div>
+                            </div>
+                        </div>
+
+                        <!-- 11. Buttons -->
+                        <div class="flex justify-end gap-2 pt-1 border-t border-black/5 dark:border-white/5">
+                            <button id="fl_btn_pause" class="px-4 py-1.5 bg-slate-200/60 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 rounded-lg text-xs font-semibold">Gelişmiş Ayarlar</button>
+                            <button id="fl_btn_search" class="px-4 py-1.5 bg-[#0078d4] text-white hover:bg-[#006cc0] rounded-lg text-xs font-semibold shadow-md">Güncellemeleri Tara</button>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 8,
+                name: "Split Panel Layout",
+                desc: "Sol sütunda tıklandığında değişen bir liste, sağ tarafta ise seçilen öğenin detayları ve form düzenleyici.",
+                app: "Marknote, kural yöneticisi, dosya analiz uygulaması",
+                icon: "fa-solid fa-table-columns",
+                classes: "flex rounded-xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-800",
+                tips: [
+                    "Sol sütundaki listeyi sadece veri seçimi (navigation) için kullanın.",
+                    "Sağ detayı, form girdileri, radyo düğmeleri ve metin düzenleme alanıyla zengin bir kontrol paneline dönüştürün."
+                ],
+                useCases: ["E-posta İstemcileri", "Dosya Gezginleri", "Markdown Not Defterleri"],
+                html: `
+                <div class="w-full max-w-3xl bg-white dark:bg-slate-950 rounded-2xl shadow-xl flex border border-slate-200/80 dark:border-slate-800 h-[380px] text-left">
+                    <!-- 1. Sol Liste Paneli -->
+                    <div class="w-1/3 border-r border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex flex-col shrink-0">
+                        <div class="p-3 border-b border-slate-200/80 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-950">
+                            <span class="text-xs font-bold text-slate-500">Notlar / Kurallar</span>
+                            <button class="text-indigo-600 text-xs"><i class="fa-solid fa-plus-circle"></i></button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                            <div class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-150 dark:border-indigo-900/30 cursor-pointer">
+                                <h4 class="text-xs font-bold text-indigo-700 dark:text-indigo-300 truncate">Claude_V3_Rule</h4>
+                                <span class="text-[9px] bg-red-100 text-red-600 px-1 py-0.2 rounded font-bold">Kritik</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Detay ve Form Düzenleme Paneli -->
+                    <div class="flex-1 p-5 flex flex-col justify-between overflow-y-auto">
+                        <div class="space-y-3">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase">Kural Detaylarını Düzenle</h3>
+                            
+                            <!-- Form Elemanları -->
+                            <div class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <!-- 2. Text Input -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Kural Adı</label>
+                                        <input type="text" id="sp_name" class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-200" value="Claude_V3_Rule">
+                                    </div>
+                                    <!-- 3. Select -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Kategori</label>
+                                        <select id="sp_category" class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-200">
+                                            <option>System Prompt</option>
+                                            <option>Regex Filter</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <!-- 4. Slider -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Öncelik: <span id="sp_prioVal">5</span></label>
+                                        <input type="range" id="sp_prio" class="w-full accent-indigo-600 cursor-pointer h-1" min="1" max="10" value="5">
+                                    </div>
+                                    <!-- 5. Select 2 -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Hedef Model</label>
+                                        <select id="sp_model" class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-200">
+                                            <option>Claude-3.5-Sonnet</option>
+                                            <option>GPT-4o</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- 6. Checkbox & 7. Radio Grupları -->
+                                <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-900 p-2 rounded-lg text-[11px]">
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="checkbox" id="sp_active" checked class="rounded accent-indigo-600">
+                                        <span>Aktif Kural</span>
+                                    </label>
+                                    <div class="flex flex-col gap-0.5">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" id="sp_strict_on" name="sp_strict" checked class="accent-indigo-600">
+                                            <span>Sıkı Eşleştirme</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- 8. Textarea -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Yönerge İçeriği (Textarea)</label>
+                                    <textarea id="sp_prompt" rows="2" class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-200 font-mono">Output code blocks using Tailwind CSS classes ONLY.</textarea>
+                                </div>
+
+                                <!-- 9. Progress Bar -->
+                                <div class="space-y-1">
+                                    <div class="flex justify-between text-[9px] text-slate-400">
+                                        <span>Derleme İlerlemesi (Progress)</span>
+                                        <span>90%</span>
+                                    </div>
+                                    <div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="w-[90%] h-full bg-indigo-600"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 10. Buttons & 11. Status Badge -->
+                        <div class="flex justify-between items-center pt-3 border-t border-slate-100 dark:border-slate-900">
+                            <span id="sp_badge" class="bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400 text-[9px] px-2 py-0.5 rounded font-bold">Kritik Revizyon</span>
+                            <div class="flex gap-2">
+                                <button id="sp_btn_del" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg text-xs font-semibold">Sil</button>
+                                <button id="sp_btn_save" class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700">Kaydet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 9,
+                name: "Kanban / Board UI",
+                desc: "Sürükle-bırak hissi uyandıran, aşamalı sütunlar ve içinde zengin detaylı görev kartları.",
+                app: "Proje takip, görev yönetimi, AI agent workflow",
+                icon: "fa-solid fa-rectangle-list",
+                classes: "flex gap-4 overflow-x-auto p-4",
+                tips: [
+                    "Board sütunlarının yanına yeni kart ekleme düğmesiyle birlikte bir filtre seçimi yerleştirin."
+                ],
+                useCases: ["Yazılım Sprint Takibi", "Satış Boru Hattı"],
+                html: `
+                <div class="w-full max-w-2xl bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 text-left space-y-4">
+                    <!-- 1. Header & 2. Select -->
+                    <div class="flex justify-between items-center border-b border-slate-150 dark:border-slate-800 pb-3">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Board Yönetim Modülü</span>
+                            <h3 class="text-sm font-bold">Ajan Görev Havuzu</h3>
+                        </div>
+                        <select id="k_sprint" class="p-1 px-2.5 bg-transparent border rounded text-[10px] text-slate-500">
+                            <option>Sprint #14 (Aktif)</option>
+                            <option>Sprint #13</option>
+                        </select>
+                    </div>
+
+                    <!-- 10+ Bileşenli Kanban Kart ve Sütun Yapısı -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border space-y-3">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-blue-500"></span> Sürdürülenler
+                            </span>
+                            
+                            <div class="bg-white dark:bg-slate-950 p-3 rounded-lg border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
+                                <h5 class="text-xs font-bold text-slate-800 dark:text-white">API Entegrasyon Modülü</h5>
+                                
+                                <!-- 3. Text Input -->
+                                <div>
+                                    <label class="block text-[8px] text-slate-400 uppercase">Ajan Sorumlusu (Input)</label>
+                                    <input type="text" id="k_assignee" class="w-full p-1 border dark:border-slate-800 rounded text-[10px] bg-transparent" value="Ajan_Alpha_R1">
+                                </div>
+
+                                <!-- 4. Select Inside Card -->
+                                <div>
+                                    <label class="block text-[8px] text-slate-400 uppercase">Görev Tipi</label>
+                                    <select id="k_type" class="w-full p-1 border dark:border-slate-800 rounded text-[10px] bg-transparent">
+                                        <option>Yapay Zeka Core</option>
+                                        <option>Arayüz Geliştirme</option>
+                                    </select>
+                                </div>
+
+                                <!-- 5. Range Slider Inside Card -->
+                                <div>
+                                    <label class="block text-[8px] text-slate-400 uppercase">İlerleme Oranı: <span id="k_progVal">70</span>%</label>
+                                    <input type="range" id="k_prog" class="w-full accent-blue-500 h-1 cursor-pointer" min="0" max="100" value="70">
+                                </div>
+
+                                <!-- 6. Checkbox & 7. Radio Grupları -->
+                                <div class="p-2 bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded text-[9px] space-y-1 text-slate-500">
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="checkbox" id="k_alert" checked class="rounded accent-blue-500">
+                                        <span>Slack bildirimi gönder</span>
+                                    </label>
+                                    <div class="flex gap-2 mt-1">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" id="k_prio_high" name="k_prio" checked class="accent-blue-500">
+                                            <span>Yüksek</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- 8. Textarea Inside Card -->
+                                <div>
+                                    <label class="block text-[8px] text-slate-400 uppercase">Yorumlar / Notlar (Textarea)</label>
+                                    <textarea id="k_comment" rows="1" class="w-full p-1 border dark:border-slate-800 rounded text-[10px] bg-transparent" placeholder="Hataları buraya girin..."></textarea>
+                                </div>
+
+                                <!-- 9. Progress Bar Inside Card -->
+                                <div class="space-y-1">
+                                    <div class="flex justify-between text-[8px] text-slate-400">
+                                        <span>Genel Sprint Hedefi</span>
+                                        <span>70%</span>
+                                    </div>
+                                    <div class="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="w-[70%] h-full bg-blue-500"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 10. Checklist Tablosu -->
+                                <div class="border rounded p-1 text-[9px] text-slate-400 max-h-12 overflow-y-auto">
+                                    <div class="flex justify-between border-b pb-0.5 mb-0.5">
+                                        <span>Alt Görev</span>
+                                        <span>Bitti</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Kriter testleri</span>
+                                        <span class="text-blue-500 font-bold">Evet</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11. Buttons & Status Badge -->
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-100 dark:border-slate-800">
+                        <span id="k_badge" class="bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 text-[9px] px-2 py-0.5 rounded font-bold">Ajan Aktif: Alpha</span>
+                        <div class="flex gap-2">
+                            <button id="k_btn_abort" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded text-[11px] font-semibold">Tümünü İptal Et</button>
+                            <button id="k_btn_add" class="px-4 py-1 bg-indigo-600 text-white rounded text-[11px] font-semibold hover:bg-indigo-700">Kart Oluştur</button>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 10,
+                name: "Terminal + GUI Hybrid",
+                desc: "Üst kısımda zengin kontrol form butonları, alt kısımda ise gerçek zamanlı akan konsol çıktıları.",
+                app: "wmole, updater, installer, CLI wrapper uygulamaları",
+                icon: "fa-solid fa-terminal",
+                classes: "flex flex-col rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800",
+                tips: [
+                    "Arayüzün üst alanındaki GUI form kontrollerinde belirgin checkbox grupları ve kaydırıcılar kullanın."
+                ],
+                useCases: ["Kurulum Sihirbazları", "Veritabanı Senkronize Ediciler"],
+                html: `
+                <div class="w-full max-w-xl bg-white dark:bg-slate-950 rounded-2xl shadow-xl border overflow-hidden text-left flex flex-col h-[400px]">
+                    <!-- Üst GUI Kontrolleri ve 10+ Bileşenli Form -->
+                    <div class="p-4 border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 space-y-3.5 shrink-0 text-xs">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-[9px] text-slate-400 font-bold block uppercase">Migration Setup</span>
+                                <h3 class="text-xs font-bold text-slate-800 dark:text-white">Veri Taşıma & Senkronizasyon</h3>
+                            </div>
+                            <!-- 1. Status Badge -->
+                            <span id="term_status" class="bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 text-[9px] px-2 py-0.5 rounded font-bold">Hazır</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- 2. Text Input -->
+                            <div>
+                                <label class="block text-slate-400 mb-0.5 font-bold uppercase text-[9px]">Hedef Sunucu IP (Input)</label>
+                                <input type="text" id="term_host" value="192.168.1.144" class="w-full p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded">
+                            </div>
+                            <!-- 3. Select 1 -->
+                            <div>
+                                <label class="block text-slate-400 mb-0.5 font-bold uppercase text-[9px]">İstek Oranı (Select)</label>
+                                <select id="term_rate" class="w-full p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded">
+                                    <option>250 Kayıt / saniye</option>
+                                    <option>1000 Kayıt / saniye</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- 4. Slider (Range) -->
+                            <div>
+                                <label class="block text-slate-400 mb-0.5 font-bold uppercase text-[9px]">Bellek Sınırı: <span id="term_limitVal">60</span>%</label>
+                                <input type="range" id="term_limit" class="w-full accent-indigo-600 h-1 cursor-pointer mt-1" min="10" max="100" value="60">
+                            </div>
+                            <!-- 5. Select 2 -->
+                            <div>
+                                <label class="block text-slate-400 mb-0.5 font-bold uppercase text-[9px]">Sıkıştırma Algoritması</label>
+                                <select id="term_compression" class="w-full p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded">
+                                    <option>GZip Sıkıştırması</option>
+                                    <option>ZStandard (Hızlı)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 6. Checkbox & 7. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800 text-[10px]">
+                            <label class="flex items-center gap-1.5 cursor-pointer text-slate-500">
+                                <input type="checkbox" id="term_verbose" checked class="rounded accent-indigo-600">
+                                <span>Verbose Log Yazımı</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center gap-1 cursor-pointer text-slate-500">
+                                    <input type="radio" id="term_mode_db" name="term_mode" checked class="accent-indigo-600">
+                                    <span>SQL Modu</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 8. Metin Alanı (Textarea) -->
+                        <div>
+                            <label class="block text-slate-400 mb-0.5 font-bold uppercase text-[9px]">Ön Hazırlık SQL Komutu</label>
+                            <textarea id="term_sql" rows="1" class="w-full p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-[10px] font-mono">TRUNCATE TABLE staging_logs;</textarea>
+                        </div>
+
+                        <!-- 9. Progress Bar -->
+                        <div class="space-y-0.5">
+                            <div class="flex justify-between text-[8px] text-slate-400">
+                                <span>Taşıma Durumu (Progress)</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[45%] h-full bg-emerald-500"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alt Terminal Logları (10. Terminal Liste / Tablo) -->
+                    <div class="flex-1 bg-black p-4 font-mono text-[10px] text-green-400 overflow-y-auto space-y-1">
+                        <p class="text-slate-500">[2026-06-04 10:27:01] Bağlantı başarılı: 192.168.1.144:3306</p>
+                        <p class="text-emerald-500">[2026-06-04 10:27:02] [OK] Migration şeması oluşturuldu.</p>
+                        <p class="text-amber-500">[2026-06-04 10:27:03] [WARN] 'legacy_logs' tablosu boş, atlanıyor.</p>
+                        <p class="text-cyan-400 animate-pulse">[2026-06-04 10:27:04] [INFO] Aktarım yapılıyor: %45 tamamlandı...</p>
+                    </div>
+
+                    <!-- 11. Buttons -->
+                    <div class="p-2 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 flex justify-end gap-2 shrink-0">
+                        <button id="term_btn_stop" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white font-bold rounded text-[10px]">Durdur</button>
+                        <button id="term_btn_start" class="px-4 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded text-[10px]">Senkronizasyonu Başlat</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 11,
+                name: "Floating Tool Window",
+                desc: "Her zaman en üstte duran, ekran köşelerine yerleşebilen zengin form kontrollerine sahip mini paneller.",
+                app: "OCR capture, clipboard manager, quick launcher",
+                icon: "fa-regular fa-clone",
+                classes: "shadow-2xl rounded-2xl border bg-white dark:bg-slate-900 p-4 w-52",
+                tips: [
+                    "Çok kısıtlı alanda maksimum form zenginliği yaratmak için mikro ölçekli girdiler kullanın."
+                ],
+                useCases: ["Ekran Görüntüsü Alma Araçları", "Pano Yöneticileri"],
+                html: `
+                <div class="w-60 bg-white dark:bg-slate-900 rounded-[var(--custom-radius)] shadow-2xl border border-indigo-200/80 dark:border-indigo-950 p-4 text-left relative" style="padding: var(--custom-padding);">
+                    <!-- 1. Drag Bar & 2. Status Badge -->
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="w-12 h-1 bg-slate-300 dark:bg-slate-700 rounded-full cursor-grab"></span>
+                        <span id="flt_status" class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 text-[8px] px-1.5 py-0.2 rounded font-bold">MİKRO</span>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400">OCR Capture Configuration</span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    </div>
+
+                    <!-- 10+ Farklı Eleman İçeren Mini Form -->
+                    <div class="space-y-2.5 text-[10px] text-slate-600 dark:text-slate-300">
+                        <!-- 3. Text Input -->
+                        <div>
+                            <label class="block text-slate-400 mb-0.5 uppercase text-[8px]">Profil Adı (Input)</label>
+                            <input type="text" id="flt_profile" class="w-full p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded text-[9px]" value="Default_Scan">
+                        </div>
+
+                        <!-- 4. Select -->
+                        <div>
+                            <label class="block text-slate-400 mb-0.5 uppercase text-[8px]">Hedef Çeviri Dili (Select)</label>
+                            <select id="flt_lang" class="w-full p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded text-[9px]">
+                                <option>Türkçe (TR)</option>
+                                <option>İngilizce (EN)</option>
+                            </select>
+                        </div>
+
+                        <!-- 5. Range Slider -->
+                        <div>
+                            <label class="block text-slate-400 mb-0.5 uppercase text-[8px]">Görüntü Çözünürlüğü: <span id="flt_resVal">300</span> DPI</label>
+                            <input type="range" id="flt_res" class="w-full accent-indigo-500 h-1 cursor-pointer" min="150" max="600" value="300">
+                        </div>
+
+                        <!-- 6. Select 2 -->
+                        <div>
+                            <label class="block text-slate-400 mb-0.5 uppercase text-[8px]">Metin Biçimi (Format)</label>
+                            <select id="flt_format" class="w-full p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded text-[9px]">
+                                <option>Ham Metin (Text)</option>
+                                <option>Tablo Ayrıştırma</option>
+                            </select>
+                        </div>
+
+                        <!-- 7. Checkbox & 8. Radio Grupları -->
+                        <div class="space-y-1 bg-slate-50 dark:bg-slate-950 p-2 border border-slate-100 dark:border-slate-800 rounded text-[9px]">
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="checkbox" id="flt_auto" checked class="rounded accent-indigo-600">
+                                <span>Otomatik Panoya Kopyala</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center gap-1 cursor-pointer">
+                                    <input type="radio" id="flt_engine_tess" name="flt_engine" checked class="accent-indigo-600">
+                                    <span>Tesseract</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 9. Textarea -->
+                        <div>
+                            <label class="block text-slate-400 mb-0.5 uppercase text-[8px]">Hatalı Karakter Değişim Listesi</label>
+                            <textarea id="flt_replacements" rows="1" class="w-full p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded text-[9px] font-mono">{"i": "ı", "ö": "o"}</textarea>
+                        </div>
+
+                        <!-- 10. Progress Bar -->
+                        <div class="space-y-0.5">
+                            <div class="flex justify-between text-[8px] text-slate-400">
+                                <span>Ajan Bellek Payı</span>
+                                <span>25%</span>
+                            </div>
+                            <div class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[25%] h-full bg-indigo-600"></div>
+                            </div>
+                        </div>
+
+                        <!-- 11. Son İşlemler Listesi -->
+                        <div class="border rounded p-1 text-[8px] text-slate-400 max-h-12 overflow-y-auto">
+                            <div class="flex justify-between border-b pb-0.5 mb-0.5 font-bold">
+                                <span>Ekran Kesiti</span>
+                                <span>Durum</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>screenshot_01.png</span>
+                                <span class="text-emerald-500">Okundu</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 12. Buttons -->
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-1">
+                        <button id="flt_btn_hide" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded text-[9px] font-semibold">Gizle</button>
+                        <button id="flt_btn_capture" class="px-3 py-1 bg-indigo-600 text-white rounded text-[9px] font-bold">Ekranı Yakala</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 12,
+                name: "Workspace UI",
+                desc: "Çoklu sekmeli dosya yapısı, ayar kontrol panelleri barındıran kompleks çalışma ortamları.",
+                app: "Claude/Codex/OpenCode kuralları yöneten uygulama",
+                icon: "fa-solid fa-briefcase",
+                classes: "flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950",
+                tips: [
+                    "Çalışma alanında hem dosya navigasyonunu hem de o anki açık dosyanın parametre formunu yan yana yerleştirin."
+                ],
+                useCases: ["Proje Yönetim Panelleri", "Kod Editörleri"],
+                html: `
+                <div class="w-full max-w-3xl bg-white dark:bg-slate-950 rounded-[var(--custom-radius)] shadow-xl flex border border-slate-200/80 dark:border-slate-800 h-[380px] text-left overflow-hidden">
+                    <!-- 1. Sol Workspace Klasör Ağacı -->
+                    <div class="w-44 border-r border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 p-3 flex flex-col justify-between shrink-0">
+                        <div class="space-y-3">
+                            <div class="bg-white dark:bg-slate-900 p-1.5 rounded border border-slate-200/60 dark:border-slate-800 text-[10px] font-bold">
+                                workspace_config_v3
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[8px] text-slate-400 font-bold block uppercase">Dosya Listesi</span>
+                                <p class="text-[10px] py-1 px-1.5 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 cursor-pointer"><i class="fa-solid fa-file-code"></i> agent_prompts.md</p>
+                            </div>
+                        </div>
+                        <!-- 2. Status Badge -->
+                        <span id="ws_branch_badge" class="text-[9px] text-slate-400"><i class="fa-solid fa-code-branch"></i> branch: release-2.5</span>
+                    </div>
+
+                    <!-- Sağ Editör ve Parametre Düzenleme Formu (10+ Eleman) -->
+                    <div class="flex-1 flex flex-col bg-slate-50/20 dark:bg-slate-900/10">
+                        <div class="flex bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-[10px] font-bold shrink-0">
+                            <div class="px-3 py-1.5 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400">
+                                agent_prompts.md
+                            </div>
+                        </div>
+
+                        <!-- Zengin Ayar ve Form Editörü -->
+                        <div class="p-4 space-y-3 flex-1 overflow-y-auto text-xs" style="padding: var(--custom-padding);">
+                            <div class="grid grid-cols-2 gap-3">
+                                <!-- 3. Text Input -->
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Ajan Modeli Adı (Input)</label>
+                                    <input type="text" id="ws_agent_name" class="w-full p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-[11px]" value="Ajan_Vertex_R1">
+                                </div>
+                                <!-- 4. Select -->
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Optimizasyon Hedefi (Select)</label>
+                                    <select id="ws_opt" class="w-full p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-[11px]">
+                                        <option>Maksimum Hız</option>
+                                        <option>Düşük Token Tüketimi</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <!-- 5. Range Slider -->
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Maksimum Token: <span id="ws_tokensVal">4000</span></label>
+                                    <input type="range" id="ws_tokens" class="w-full accent-indigo-600 h-1 cursor-pointer mt-1" min="1000" max="8000" value="4000">
+                                </div>
+                                <!-- 6. Select 2 -->
+                                <div>
+                                    <label class="block text-slate-400 mb-1">Format Türü</label>
+                                    <select id="ws_format" class="w-full p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-[11px]">
+                                        <option>JSON Nesnesi</option>
+                                        <option>Düz Metin (Markdown)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 7. Checkbox & 8. Radio Grupları -->
+                            <div class="grid grid-cols-2 gap-3 bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800 text-[10px]">
+                                <label class="flex items-center gap-1.5 cursor-pointer text-slate-500">
+                                    <input type="checkbox" id="ws_autosave" checked class="rounded accent-indigo-600">
+                                    <span>Dosyayı Otomatik Kaydet</span>
+                                </label>
+                                <div class="flex gap-2">
+                                    <label class="flex items-center gap-1 cursor-pointer text-slate-500">
+                                        <input type="radio" id="ws_mode_live" name="ws_mode" checked class="accent-indigo-600">
+                                        <span>Canlı</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 9. Textarea -->
+                            <div>
+                                <label class="block text-slate-400 mb-1">Ajan Talimat Metni (Textarea)</label>
+                                <textarea id="ws_prompt" class="w-full p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-[10px] font-mono" rows="2">## System Instruction
+Generate code utilizing Tailwind CSS.</textarea>
+                            </div>
+
+                            <!-- 10. Progress Bar -->
+                            <div class="space-y-0.5">
+                                <div class="flex justify-between text-[8px] text-slate-400">
+                                    <span>Derleme Seviyesi (Progress)</span>
+                                    <span>55%</span>
+                                </div>
+                                <div class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="w-[55%] h-full bg-indigo-600"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 11. Buttons -->
+                        <div class="p-2 border-t border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 flex justify-end gap-2 shrink-0">
+                            <button id="ws_btn_discard" class="px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded text-[10px]">Temizle</button>
+                            <button id="ws_btn_commit" class="px-4 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded text-[10px]">Projeyi Commit Et</button>
+                        </div>
+                    </div>
+                </div>`
+            },
+            {
+                id: 13,
+                name: "Settings-First UI",
+                desc: "Ayarlara, API anahtarlarına, hassas maskelenmiş girdilere ve model sıcaklıklarına odaklanan kontrol panelleri.",
+                app: "OpenRouter/DeepSeek/NVIDIA API manager",
+                icon: "fa-solid fa-sliders",
+                classes: "bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800",
+                tips: [
+                    "Maskeli şifre kutuları ve yanlarında göz simgesi olan form elemanları tasarlayın.",
+                    "Sayısal değer girdilerini ve radyo düğmeli fatura seçeneklerini temiz gruplara ayırın."
+                ],
+                useCases: ["API Anahtar Panelleri", "SaaS Entegrasyon Ekranları"],
+                html: `
+                <div class="w-full max-w-xl bg-white dark:bg-slate-900 rounded-[var(--custom-radius)] shadow-xl border border-slate-200/80 dark:border-slate-800 p-6 text-left space-y-4" style="padding: var(--custom-padding);">
+                    <!-- 1. Header & 2. Status Badge -->
+                    <div class="border-b border-slate-150 dark:border-slate-800 pb-2.5 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-white">API Gateway Ayar Formu</h3>
+                            <p class="text-[10px] text-slate-400">Üçüncü taraf API entegrasyonlarını yapılandırın.</p>
+                        </div>
+                        <span id="set_status" class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 text-[9px] px-2 py-0.5 rounded font-bold">API STATUS: ONLINE</span>
+                    </div>
+
+                    <!-- 10+ Farklı Eleman İçeren Form Elemanları -->
+                    <div class="space-y-3.5 text-xs text-slate-700 dark:text-slate-300">
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- 3. Text Input -->
+                            <div>
+                                <label class="block font-bold mb-1">API Sunucu IP (Input)</label>
+                                <input type="text" id="set_ip" value="192.168.1.1" class="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl outline-none">
+                            </div>
+                            <!-- 4. Select -->
+                            <div>
+                                <label class="block font-bold mb-1">API Sağlayıcı Tipi (Select)</label>
+                                <select id="set_provider" class="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl outline-none">
+                                    <option>DeepSeek Inc (China)</option>
+                                    <option>OpenRouter API Hub</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 5. Maskeli Girdi (Input Password) -->
+                        <div>
+                            <label class="block font-bold mb-1">Gizli Entegrasyon Anahtarı (API_KEY)</label>
+                            <div class="relative flex items-center">
+                                <input type="password" id="set_key" value="sk-deepseek-7712398491823908a" class="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl outline-none font-mono pr-10">
+                                <button class="absolute right-3 text-slate-400"><i class="fa-solid fa-eye-slash text-xs"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <!-- 6. Range Slider -->
+                            <div>
+                                <label class="block font-bold mb-1">Günlük Kota Sınırı (Slider): <span id="set_quotaVal">50</span>$</label>
+                                <input type="range" id="set_quota" class="w-full accent-indigo-600 h-1 cursor-pointer mt-1" min="10" max="200" value="50">
+                            </div>
+                            <!-- 7. Select 2 -->
+                            <div>
+                                <label class="block font-bold mb-1">Zaman Aşımı Süresi</label>
+                                <select id="set_timeout" class="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl outline-none">
+                                    <option>30 saniye (Önerilen)</option>
+                                    <option>10 saniye (Hızlı)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 8. Checkbox & 9. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+                            <label class="flex items-center gap-1.5 cursor-pointer text-[11px]">
+                                <input type="checkbox" id="set_ssl" checked class="rounded accent-indigo-600">
+                                <span>SSL Güvenliğini Zorunlu Kıl</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center gap-1 cursor-pointer text-[11px]">
+                                    <input type="radio" id="set_billing_pay" name="set_billing" checked class="accent-indigo-600">
+                                    <span>Kullandığın Kadar Öde</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 10. Metin Alanı (Textarea) -->
+                        <div>
+                            <label class="block font-bold mb-1">Bağlantı Kimliği Özel Notu (Textarea)</label>
+                            <textarea id="set_notes" rows="1" class="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl outline-none" placeholder="Bağlantı notlarını girin..."></textarea>
+                        </div>
+
+                        <!-- 11. Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[9px] text-slate-400">
+                                <span>Günlük Harcanan Kota Durumu</span>
+                                <span>15%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[15%] h-full bg-indigo-600"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 12. Buttons -->
+                    <div class="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800 shrink-0">
+                        <button id="set_btn_test" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold rounded-xl text-xs">Bağlantıyı Test Et</button>
+                        <button id="set_btn_save" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs">Ayarları Kaydet</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 14,
+                name: "Data Table Admin UI",
+                desc: "Filtrelenebilir veri tabloları, arama alanları, durum rozetleri ve çoklu satır seçim formları.",
+                app: "Repo cleaner, dosya analiz, abonelik listesi",
+                icon: "fa-solid fa-table",
+                classes: "bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden",
+                tips: [
+                    "Tablonun en üstüne gelişmiş filtreleme ve çoklu satır silme/düzenleme butonları yerleştirin.",
+                    "Tablonun her satırının soluna çoklu işlem onay kutuları (checkboxes) koyun."
+                ],
+                useCases: ["Veritabanı Tabloları", "Kullanıcı Listeleri"],
+                html: `
+                <div class="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[var(--custom-radius)] shadow-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden text-left" style="padding: var(--custom-padding);">
+                    <!-- 1. Header, 2. Text Input & 3. Select -->
+                    <div class="p-4 border-b border-slate-150 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/20 flex flex-col md:flex-row gap-3 justify-between items-center text-xs">
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="dt_search" placeholder="Tabloda ara..." class="px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg outline-none w-44">
+                            <select id="dt_filter" class="px-2 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-500">
+                                <option>Sadece Temizlenecekler</option>
+                                <option>Tümünü Göster</option>
+                            </select>
+                        </div>
+                        <span id="dt_rows_badge" class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 text-[9px] px-2 py-0.5 rounded font-bold">3 Kayıt Listelendi</span>
+                    </div>
+
+                    <!-- 10+ Farklı Eleman İçeren Form & Tablo Yapısı -->
+                    <div class="p-4 space-y-4">
+                        <div class="grid grid-cols-2 gap-3 text-xs text-slate-600 dark:text-slate-300">
+                            <!-- 4. Range Slider -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase">Boyut Sınırı: <span id="dt_sizeVal">100</span> MB</label>
+                                <input type="range" id="dt_size" class="w-full accent-indigo-600 h-1 cursor-pointer mt-1" min="10" max="500" value="100">
+                            </div>
+                            <!-- 5. Select 2 -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase">Preservation Modu</label>
+                                <select id="dt_preserve" class="w-full p-1.5 border dark:border-slate-800 rounded bg-transparent">
+                                    <option>Dosyaları Tamamen Sil</option>
+                                    <option>Arşive Taşı (.zip)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 6. Checkbox & 7. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 text-xs bg-slate-50 dark:bg-slate-950 p-2 rounded-lg">
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" id="dt_deep" checked class="rounded accent-indigo-600">
+                                <span>Derin Tarama Yapılsın</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center gap-1 cursor-pointer">
+                                    <input type="radio" id="dt_excl_yes" name="dt_excl" checked class="accent-indigo-600">
+                                    <span>İstisnaları Koru</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 8. Textarea -->
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Göz Ardı Edilecek Dosya Uzantıları</label>
+                            <textarea id="dt_exclude_ext" rows="1" class="w-full p-2 border dark:border-slate-800 rounded bg-transparent text-xs" placeholder="Örn: .env, .example, .config"></textarea>
+                        </div>
+
+                        <!-- 9. Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[9px] text-slate-400">
+                                <span>Sürücü Doluluk Oranı (Progress)</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[78%] h-full bg-indigo-600"></div>
+                            </div>
+                        </div>
+
+                        <!-- 10. Gelişmiş Form Tablosu -->
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr class="bg-slate-100/50 dark:bg-slate-950/40 border-b text-[10px] uppercase text-slate-400 font-bold">
+                                    <th class="p-3 w-10 text-center"><input type="checkbox" checked class="rounded accent-indigo-600"></th>
+                                    <th class="p-3 text-left">Dosya & Klasör</th>
+                                    <th class="p-3 text-left">Dosya Boyutu</th>
+                                    <th class="p-3 text-left">Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
+                                    <td class="p-3 text-center"><input type="checkbox" checked class="rounded accent-indigo-600"></td>
+                                    <td class="p-3 font-semibold">/node_modules/.cache_logs/</td>
+                                    <td class="p-3 text-slate-500 font-mono">421.2 MB</td>
+                                    <td class="p-3"><span class="bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 px-2 py-0.5 rounded text-[9px] font-bold">SİLİNEBİLİR</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 11. Buttons -->
+                    <div class="p-3 bg-slate-50 dark:bg-slate-950/40 border-t flex justify-end gap-2 shrink-0">
+                        <button id="dt_btn_delete" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-[10px]">Seçilenleri Sil</button>
+                        <button id="dt_btn_scan" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-[10px]">Klasörleri Yeniden Tara</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 15,
+                name: "AI Chat + Tool Panel UI",
+                desc: "Sol alanda interaktif akıllı yapay zeka sohbeti, sağ kısımda ise zengin dışa aktarım form alanları.",
+                app: "AI destekli smart_slayt, cheatsheet generator",
+                icon: "fa-regular fa-comments",
+                classes: "flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 h-[380px]",
+                tips: [
+                    "Sol sohbet paneline zengin bir sohbet kutusu ve girdi barı yerleştirin.",
+                    "Sağ paneli, kullanıcının ürettiği slayt veya cheatsheet'i özelleştirebileceği bir parametre ayarlama paneline büründürün."
+                ],
+                useCases: ["AI Kodlama Asistanları", "Akıllı Slayt Oluşturucular"],
+                html: `
+                <div class="w-full max-w-3xl bg-white dark:bg-slate-950 rounded-[var(--custom-radius)] shadow-xl flex border border-slate-200/80 dark:border-slate-800 h-[380px] text-left overflow-hidden" style="border-radius: var(--custom-radius);">
+                    <!-- Sol Sohbet Alanı (AI Chat) -->
+                    <div class="w-1/2 border-r border-slate-200/80 dark:border-slate-800 flex flex-col justify-between bg-slate-50/20">
+                        <!-- 1. Header & 2. Status Badge -->
+                        <div class="p-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 flex justify-between items-center">
+                            <span class="text-[10px] font-bold">Smart Slayt Asistanı</span>
+                            <span id="ai_badge" class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 text-[8px] px-1.5 py-0.2 rounded font-bold">GEN_ONLINE</span>
+                        </div>
+                        
+                        <!-- Sohbet Akışı -->
+                        <div class="flex-1 overflow-y-auto p-3 space-y-3 text-[10px]">
+                            <div class="bg-slate-100 dark:bg-slate-900 p-2 rounded-xl rounded-tl-none">
+                                <p class="text-indigo-600 dark:text-indigo-400 font-bold mb-0.5">AI Asistanı</p>
+                                <p>Slayt şablonunu hazırladım! Sağ taraftaki panelden ayarları yapılandırıp indirebilirsiniz.</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. Message Input -->
+                        <div class="p-2 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 bg-white dark:bg-slate-950">
+                            <input type="text" id="ai_message" placeholder="Slayta ek bilgi yazın..." class="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-[10px] outline-none">
+                            <button id="ai_btn_send" class="bg-indigo-600 text-white p-1.5 rounded-lg text-xs shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Panel: Dışa Aktarma & Tema Düzenleyici Formu (10+ Eleman) -->
+                    <div class="flex-1 p-5 bg-slate-50 dark:bg-slate-950 flex flex-col justify-between overflow-y-auto" style="padding: var(--custom-padding);">
+                        <div class="space-y-3.5">
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Yayınlama ve İndirme Ayarları</span>
+                            
+                            <div class="space-y-2.5 text-[10px] text-slate-700 dark:text-slate-300">
+                                <!-- 4. Select -->
+                                <div>
+                                    <label class="block font-bold mb-1">Slayt Teması (Theme)</label>
+                                    <select id="ai_theme" class="w-full p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg">
+                                        <option>Modern Indigo Gradient</option>
+                                        <option>Cyberpunk Neon Red</option>
+                                    </select>
+                                </div>
+
+                                <!-- 5. Range Slider -->
+                                <div>
+                                    <label class="block font-bold mb-1">Maksimum Slayt Sayısı: <span id="ai_slides_countVal">5</span></label>
+                                    <input type="range" id="ai_slides_count" class="w-full accent-indigo-600 h-1 cursor-pointer mt-1" min="1" max="15" value="5">
+                                </div>
+
+                                <!-- 6. Select 2 -->
+                                <div>
+                                    <label class="block font-bold mb-1">Yazı Tipi Boyutu</label>
+                                    <select id="ai_font_size" class="w-full p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg">
+                                        <option>Medium (14px)</option>
+                                        <option>Large (18px)</option>
+                                    </select>
+                                </div>
+
+                                <!-- 7. Checkbox & 8. Radio Grupları -->
+                                <div class="space-y-1 bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800 text-[9px]">
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="checkbox" id="ai_transition" checked class="rounded accent-indigo-600">
+                                        <span>Geçiş Efektleri Aktif</span>
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" id="ai_format_pdf" name="ai_format" checked class="accent-indigo-600">
+                                            <span>PDF Belgesi</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- 9. Textarea -->
+                                <div>
+                                    <label class="block font-bold mb-1">Özel Altbilgi (Footer Text)</label>
+                                    <textarea id="ai_footer" rows="1" class="w-full p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-[9px]" placeholder="Slayt alt bilgisi yazın..."></textarea>
+                                </div>
+
+                                <!-- 10. Progress Bar -->
+                                <div class="space-y-0.5">
+                                    <div class="flex justify-between text-[8px] text-slate-400">
+                                        <span>Üretim Durumu (Progress)</span>
+                                        <span>100%</span>
+                                    </div>
+                                    <div class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="w-[100%] h-full bg-indigo-600"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 11. Buttons -->
+                        <button id="ai_btn_download" class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold rounded-lg shadow-md transition-all shrink-0">
+                            <i class="fa-solid fa-download mr-1"></i> Dosyayı İndir
+                        </button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 16,
+                name: "Classic Windows Form",
+                desc: "90'lar ve 2000'lerin başı retro pencereli masaüstü estetiği, gri tonlu 3D çerçeveler ve belirgin piksel detaylı kontroller.",
+                app: "VB.NET / C# Legacy, sistem araçları, masaüstü veritabanı panelleri",
+                icon: "fa-solid fa-window-restore",
+                classes: "bg-[#d4d0c8] text-black border-2 border-t-white border-l-white border-r-[#808080] border-b-[#808080] font-sans",
+                tips: [
+                    "Çerçeveleri flat modern gölgeler yerine koyu gri ve beyaz keskin çizgilerle (3D outset) tasarlayın.",
+                    "Input kutularını içe bükük (win98-inset), butonları ve pencereleri ise dışa bükük (win98-outset) yapın."
+                ],
+                useCases: ["WinForms Simülatörü", "Nostaljik Sistem Araçları"],
+                html: `
+                <div class="w-full max-w-lg p-1 win98-window win98-outset text-black font-sans text-xs select-none text-left">
+                    <!-- 1. Blue Title Bar / 2. Status Badge -->
+                    <div class="bg-gradient-to-r from-[#000080] to-[#1084d0] px-2 py-1 flex justify-between items-center text-white font-bold">
+                        <div class="flex items-center gap-1.5 text-[11px]">
+                            <i class="fa-solid fa-window-restore text-[10px]"></i>
+                            <span>Veritabanı Kurulum Sihirbazı v2.1</span>
+                        </div>
+                        <span id="win_db_badge" class="bg-[#c0c0c0] text-black text-[9px] px-1.5 py-0.2 border border-t-white border-l-white border-r-[#808080] border-b-[#808080] font-bold">DB: OFFLINE</span>
+                    </div>
+
+                    <!-- Main Workspace -->
+                    <div class="p-4 bg-[#d4d0c8] space-y-3 text-black">
+                        <!-- GroupBox: Klasik Retro Group Çerçevesi -->
+                        <div class="relative border border-t-white border-l-white border-r-[#808080] border-b-[#808080] p-4 pt-5">
+                            <span class="absolute -top-2.5 left-3 bg-[#d4d0c8] px-1 font-bold text-[11px]">SQL Server Bağlantı Parametreleri</span>
+                            
+                            <div class="space-y-2.5 text-[11px]">
+                                <!-- 3. Text Input (Inset) -->
+                                <div class="grid grid-cols-3 items-center gap-2">
+                                    <label class="text-right font-medium">Sunucu IP:</label>
+                                    <input type="text" id="win_ip" value="127.0.0.1" class="col-span-2 win98-inset px-2 py-0.5 outline-none font-mono">
+                                </div>
+                                <!-- 4. Select (Inset) -->
+                                <div class="grid grid-cols-3 items-center gap-2">
+                                    <label class="text-right font-medium">Doğrulama:</label>
+                                    <select id="win_auth" class="col-span-2 win98-inset px-1 py-0.5 outline-none">
+                                        <option>SQL Server Authentication</option>
+                                        <option>Windows Integrated Auth</option>
+                                    </select>
+                                </div>
+                                <!-- 5. Range Slider -->
+                                <div class="grid grid-cols-3 items-center gap-2">
+                                    <label class="text-right font-medium">Havuz Boyutu: <span id="win_poolVal">100</span></label>
+                                    <input type="range" id="win_pool" class="col-span-2 cursor-pointer h-1 bg-[#808080]" min="10" max="200" value="100">
+                                </div>
+                                <!-- 6. Select 2 (Inset) -->
+                                <div class="grid grid-cols-3 items-center gap-2">
+                                    <label class="text-right font-medium">Protokol:</label>
+                                    <select id="win_protocol" class="col-span-2 win98-inset px-1 py-0.5 outline-none">
+                                        <option>TCP/IP (Varsayılan)</option>
+                                        <option>Named Pipes</option>
+                                    </select>
+                                </div>
+                                <!-- 7. Checkbox & 8. Radio Grupları -->
+                                <div class="grid grid-cols-3 items-start gap-2">
+                                    <label class="text-right font-medium">Seçenekler:</label>
+                                    <div class="col-span-2 flex flex-col gap-1">
+                                        <label class="flex items-center gap-1.5 cursor-pointer">
+                                            <input type="checkbox" id="win_ssl" checked class="accent-black">
+                                            <span>SSL Sertifikası Zorunlu</span>
+                                        </label>
+                                        <label class="flex items-center gap-1.5 cursor-pointer">
+                                            <input type="radio" id="win_pooling_on" name="win_pooling" checked class="accent-black">
+                                            <span>Connection Pooling</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Metin Alanı (Textarea) -->
+                        <div>
+                            <label class="block font-bold text-[10px] mb-1">Bağlantı Başlangıç Scripti (Textarea)</label>
+                            <textarea id="win_script" rows="1" class="w-full win98-inset p-1 outline-none font-mono text-[10px]">SET NOCOUNT ON;</textarea>
+                        </div>
+
+                        <!-- 10. Progress Bar (Retro Piksel Tarzı) -->
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="font-bold">Bağlantı Kurulum Durumu:</span>
+                            <div class="w-48 h-5 win98-inset p-0.5 flex gap-0.5 overflow-hidden bg-white shrink-0">
+                                <div class="w-4 h-full bg-[#000080]"></div>
+                                <div class="w-4 h-full bg-[#000080]"></div>
+                                <div class="w-4 h-full bg-[#000080]"></div>
+                                <div class="w-4 h-full bg-[#000080]"></div>
+                                <div class="w-4 h-full bg-[#000080]"></div>
+                                <span class="text-[10px] text-black font-bold pl-2 self-center">%50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11. Buttons (Outset Butonlar) -->
+                    <div class="bg-[#d4d0c8] px-4 py-2 flex justify-end gap-2 border-t border-[#808080] shrink-0">
+                        <button id="win_btn_conn" class="win98-button win98-outset px-4 py-1 font-bold min-w-[80px] hover:bg-[#e6e6e6]">Bağlan</button>
+                        <button id="win_btn_cancel" class="win98-button win98-outset px-4 py-1 min-w-[80px] hover:bg-[#e6e6e6]">İptal</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 17,
+                name: "Cyberpunk HUD UI",
+                desc: "Fütüristik keskin hatlar, glitch görünümleri, veri yoğunluğu ve keskin açılı neon form elemanları.",
+                app: "Sci-Fi kontrol ekranları, oyun yönetim konsolları, AI otonom ajan panelleri",
+                icon: "fa-solid fa-user-astronaut",
+                classes: "bg-black text-cyan-400 border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)] font-mono",
+                tips: [
+                    "Çerçeveleri tamamen keskin köşelerden oluşturup sadece tek bir köşeyi 45 derece eğimli kesin (clip-path).",
+                    "Düğmelerin arka planına glitch animasyonları ve parlayan neon gölgeler uygulayın."
+                ],
+                useCases: ["Ajan Kontrol Odası", "Siber Güvenlik Tarayıcıları", "HUD Göstergeleri"],
+                html: `
+                <div class="w-full max-w-xl p-6 bg-black border-2 border-cyan-500 rounded-none shadow-[0_0_20px_rgba(6,182,212,0.3)] text-cyan-400 font-mono text-xs text-left">
+                    <!-- 1. Header & 2. Status Badge -->
+                    <div class="flex justify-between items-center border-b border-cyan-800 pb-2 mb-4">
+                        <span class="tracking-widest font-black text-sm">NEO_MATRIX v4.2</span>
+                        <span id="cy_status" class="text-rose-500 animate-pulse font-bold">▲ CAUTION: OVERHEAT</span>
+                    </div>
+
+                    <!-- 10+ Farklı Eleman İçeren Neon Form -->
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- 3. Text Input -->
+                            <div>
+                                <span class="block text-[9px] text-cyan-600 font-bold mb-1 uppercase">Hedef Sektör (Input)</span>
+                                <input type="text" id="cy_target" class="w-full bg-black border border-cyan-800 focus:border-cyan-400 px-3 py-1.5 text-xs text-cyan-300 outline-none" value="SECTOR_Z_09">
+                            </div>
+                            <!-- 4. Select -->
+                            <div>
+                                <span class="block text-[9px] text-cyan-600 font-bold mb-1 uppercase">Güç Dağıtıcı (Select)</span>
+                                <select id="cy_grid" class="w-full bg-black border border-cyan-800 focus:border-cyan-400 px-3 py-1.5 text-xs text-cyan-300 outline-none">
+                                    <option>Ana Reaktör #1</option>
+                                    <option>Yedek Jeneratör</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 5. Range Slider -->
+                        <div>
+                            <span class="block text-[9px] text-cyan-600 font-bold mb-1 uppercase">Lazer Yoğunluğu (Slider): <span id="cy_laserVal">75</span>%</span>
+                            <input type="range" id="cy_laser" class="w-full accent-cyan-400 bg-neutral-900 cursor-pointer h-1" min="10" max="100" value="75">
+                        </div>
+
+                        <!-- 6. Select 2 -->
+                        <div>
+                            <span class="block text-[9px] text-cyan-600 font-bold mb-1 uppercase">Siber Koruma Kalkanı</span>
+                            <select id="cy_shield" class="w-full bg-black border border-cyan-800 focus:border-cyan-400 px-3 py-1.5 text-xs text-cyan-300 outline-none">
+                                <option>Elektromanyetik Bariyer</option>
+                                <option>Kuantum Şifreleme</option>
+                            </select>
+                        </div>
+
+                        <!-- 7. Checkbox & 8. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 bg-neutral-950 p-2.5 border border-cyan-900 text-[10px]">
+                            <label class="flex items-center gap-1.5 cursor-pointer text-cyan-500">
+                                <input type="checkbox" id="cy_overclock" checked class="accent-cyan-400">
+                                <span>Core Overclock Aktif</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center gap-1 cursor-pointer text-cyan-500">
+                                    <input type="radio" id="cy_mode_atk" name="cy_mode" checked class="accent-cyan-400">
+                                    <span>Hücum Protokolü</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 9. Textarea -->
+                        <div>
+                            <span class="block text-[9px] text-cyan-600 font-bold mb-1 uppercase">Manuel Terminal Komut Kümesi (Textarea)</span>
+                            <textarea id="cy_commands" rows="2" class="w-full bg-black border border-cyan-800 focus:border-cyan-400 p-2 text-xs text-cyan-300 outline-none font-mono">INITIATE DECRYPTION_PROTOCOL --NODE=7</textarea>
+                        </div>
+
+                        <!-- 10. Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[8px] text-cyan-600">
+                                <span>Güvenlik Kırılma Seviyesi (Progress)</span>
+                                <span>82%</span>
+                            </div>
+                            <div class="w-full h-1 bg-neutral-900 overflow-hidden">
+                                <div class="w-[82%] h-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></div>
+                            </div>
+                        </div>
+
+                        <!-- 11. Siber Grid Log Listesi -->
+                        <div class="border border-cyan-900 p-2 text-[9px] space-y-1 max-h-12 overflow-y-auto">
+                            <div class="flex justify-between border-b border-cyan-950 pb-0.5">
+                                <span>NODE</span>
+                                <span>AKTARIM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>#NODE_778</span>
+                                <span class="text-rose-500 font-bold">Kritik Sızma</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 12. Buttons -->
+                    <div class="flex gap-2 justify-end pt-3 border-t border-cyan-900 mt-3">
+                        <button id="cy_btn_abort" class="px-3 py-1.5 border border-cyan-800 text-cyan-600 hover:text-white rounded-none">ABORT</button>
+                        <button id="cy_btn_init" class="px-4 py-1.5 bg-cyan-500 text-black font-bold rounded-none shadow-md">HACK SYSTEM</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 18,
+                name: "Neo-Brutalism UI",
+                desc: "Kalın siyah kenarlıklar, yumuşatılmamış düz köşeler, doygun pastel renk zeminler ve retro sert pencereler.",
+                app: "Trendy SaaS araçları, kural yönetim şablonları, yenilikçi web kütüphaneleri",
+                icon: "fa-solid fa-shapes",
+                classes: "bg-amber-100 text-black border-[3px] border-black shadow-[4px_4px_0px_0px_#000] rounded-none font-bold",
+                tips: [
+                    "Vurgular için tamamen doygun pastel renkler (Sarı, Pembe, Turuncu) kullanın.",
+                    "Tüm gölgeleri blur efekti vermeden sert ve düz siyah kayma olarak tasarlayın."
+                ],
+                useCases: ["Modern SaaS Panelleri", "Görev Panoları", "Fikir Karalama Defterleri"],
+                html: `
+                <div class="w-full max-w-xl p-6 bg-yellow-200 border-[3px] border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-none text-black text-left font-bold space-y-4">
+                    <!-- 1. Header & 2. Status Badge -->
+                    <div class="bg-black text-white p-2.5 text-center text-xs tracking-wider uppercase flex justify-between items-center">
+                        <span>Neo-Brutalist Form Workspace</span>
+                        <span id="nb_status" class="bg-yellow-400 text-black px-2 py-0.5 border border-black font-black text-[9px]">SIRA: AKTİF</span>
+                    </div>
+
+                    <!-- 10+ Farklı Eleman İçeren Brutalist Form -->
+                    <div class="space-y-4 text-xs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- 3. Text Input -->
+                            <div>
+                                <label class="block uppercase mb-1">Görevin Başlığı (Input)</label>
+                                <input type="text" id="nb_title" class="w-full p-2 border-2 border-black bg-white focus:bg-pink-100 outline-none text-xs" value="Brutalist_Campaign_V2">
+                            </div>
+                            <!-- 4. Select -->
+                            <div>
+                                <label class="block uppercase mb-1">Önem Sırası (Select)</label>
+                                <select id="nb_urgency" class="w-full p-2 border-2 border-black bg-white outline-none text-xs">
+                                    <option>Çok Acil (High)</option>
+                                    <option>Normal (Medium)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 5. Range Slider -->
+                        <div>
+                            <label class="block uppercase mb-1">Bütçe Dağılımı: <span id="nb_budgetVal">200</span>$</label>
+                            <input type="range" id="nb_budget" class="w-full accent-black h-2 border-2 border-black bg-white" min="50" max="500" value="200">
+                        </div>
+
+                        <!-- 6. Select 2 -->
+                        <div>
+                            <label class="block uppercase mb-1">Hedef Kanal</label>
+                            <select id="nb_channel" class="w-full p-2 border-2 border-black bg-white outline-none text-xs">
+                                <option>Social Media Campaign</option>
+                                <option>Email Marketing</option>
+                            </select>
+                        </div>
+
+                        <!-- 7. Checkbox & 8. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 p-3 border-2 border-black bg-pink-100">
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" id="nb_alert" checked class="w-4 h-4 rounded-none border-2 border-black accent-black">
+                                <span>Bildirimleri Aç</span>
+                            </label>
+                            <div class="flex flex-col gap-0.5">
+                                <label class="flex items-center gap-1 cursor-pointer">
+                                    <input type="radio" id="nb_format_html" name="nb_format" checked class="accent-black">
+                                    <span>HTML Çıktı formatı</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 9. Textarea -->
+                        <div>
+                            <label class="block uppercase mb-1">Kampanya Açıklama Metni (Textarea)</label>
+                            <textarea id="nb_desc" rows="2" class="w-full p-2 border-2 border-black bg-white outline-none text-xs" placeholder="Detaylı açıklamayı yazın..."></textarea>
+                        </div>
+
+                        <!-- 10. Progress Bar (Blok Tarzı) -->
+                        <div class="space-y-1">
+                            <span class="block uppercase text-[10px]">Kampanya Hazırlık İlerlemesi</span>
+                            <div class="w-full h-5 border-2 border-black bg-white overflow-hidden p-0.5 flex">
+                                <div class="w-[65%] h-full bg-pink-400 border-r-2 border-black"></div>
+                                <span class="pl-2 text-[10px] self-center">65%</span>
+                            </div>
+                        </div>
+
+                        <!-- 11. Tablo / Liste Elemanı -->
+                        <div class="border-2 border-black bg-white p-2 text-[10px] space-y-1 max-h-12 overflow-y-auto">
+                            <div class="flex justify-between border-b-2 border-black pb-0.5 mb-0.5">
+                                <span>HEDEF GRUP</span>
+                                <span>DURUM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Developers_SaaS</span>
+                                <span class="text-green-600">Aktif</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 12. Buttons -->
+                    <div class="flex gap-2 justify-end pt-3 border-t-2 border-black mt-3">
+                        <button id="nb_btn_reset" class="px-3 py-1.5 border-2 border-black bg-white active:translate-y-0.5 min-w-[80px]">Temizle</button>
+                        <button id="nb_btn_submit" class="px-4 py-1.5 border-2 border-black bg-yellow-400 shadow-[2px_2px_0px_0px_#000] active:translate-y-0.5 min-w-[80px]">Kaydet</button>
+                    </div>
+                </div>`
+            },
+            {
+                id: 19,
+                name: "Claymorphism",
+                desc: "İç ve dış çift gölgenin birleşimiyle oluşan, yumuşacık kil/hamur görünümlü modern ve cana yakın arayüz elemanları.",
+                app: "Kişisel asistanlar, yaratıcı portfolyo araçları, çocuksu/eğlenceli küçük paneller",
+                icon: "fa-solid fa-palette",
+                classes: "bg-blue-100 text-slate-800 shadow-[10px_10px_20px_rgba(0,0,0,0.06),inset_-8px_-8px_16px_rgba(0,0,0,0.1)] rounded-3xl",
+                tips: [
+                    "Çift iç gölge kullanın: Bir adet sol üstten parlayan beyaz iç gölge, bir adet sağ alttan koyu soluk iç gölge.",
+                    "Arka plan renklerini tamamen pastel tonlarda seçin."
+                ],
+                useCases: ["Kişisel Günlükler", "Çocuksu Eğitim Platformları", "Yaratıcı AI Asistanları"],
+                html: `
+                <div class="w-full max-w-xl p-6 clay-card rounded-[30px] text-slate-800 text-left font-sans space-y-4" style="padding: var(--custom-padding);">
+                    <!-- 1. Header & 2. Status Badge -->
+                    <div class="flex justify-between items-center border-b border-pink-200 dark:border-pink-900 pb-2.5">
+                        <div>
+                            <span class="text-[9px] font-bold text-pink-500 uppercase block">Yaratıcı Karalama Defteri</span>
+                            <h3 class="text-sm font-bold text-slate-700 dark:text-pink-100">Claymorphic Workspace</h3>
+                        </div>
+                        <span id="cl_badge" class="bg-pink-100 dark:bg-pink-950 text-pink-600 dark:text-pink-300 text-[9px] px-2 py-0.5 rounded-full font-bold shadow-inner">KİL MODÜLÜ</span>
+                    </div>
+
+                    <!-- 10+ Farklı Eleman İçeren Claymorphic Form -->
+                    <div class="space-y-4 text-xs text-slate-700 dark:text-slate-300">
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- 3. Text Input -->
+                            <div>
+                                <label class="block font-bold text-slate-500 mb-1 uppercase text-[9px]">Kullanıcı Adı (Input)</label>
+                                <input type="text" id="cl_username" class="w-full p-2 bg-white/70 border-none outline-none rounded-2xl text-xs shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)] text-slate-700" value="Yumuşak_Kil_Modu">
+                            </div>
+                            <!-- 4. Select -->
+                            <div>
+                                <label class="block font-bold text-slate-500 mb-1 uppercase text-[9px]">Avatar Karakteri (Select)</label>
+                                <select id="cl_avatar" class="w-full p-2 bg-white/70 border-none outline-none rounded-2xl text-xs shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)] text-slate-700">
+                                    <option>Ajan Tavşan</option>
+                                    <option>Ajan Ayı</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 5. Range Slider -->
+                        <div>
+                            <label class="block font-bold text-slate-500 mb-1 uppercase text-[9px]">Eğlence Seviyesi (Slider): <span id="cl_funVal">80</span>%</label>
+                            <div class="bg-white/50 p-2 rounded-2xl shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)]">
+                                <input type="range" id="cl_fun" class="w-full accent-pink-500 h-1 cursor-pointer bg-slate-200" min="10" max="100" value="80">
+                            </div>
+                        </div>
+
+                        <!-- 6. Select 2 -->
+                        <div>
+                            <label class="block font-bold text-slate-500 mb-1 uppercase text-[9px]">Sınıf Seçimi</label>
+                            <select id="cl_class" class="w-full p-2 bg-white/70 border-none outline-none rounded-2xl text-xs shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)] text-slate-700">
+                                <option>A Sınıfı Üyelik</option>
+                                <option>B Sınıfı Üyelik</option>
+                            </select>
+                        </div>
+
+                        <!-- 7. Checkbox & 8. Radio Grupları -->
+                        <div class="grid grid-cols-2 gap-3 bg-white/30 p-2.5 rounded-2xl shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)]">
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" id="cl_private" checked class="rounded-full accent-pink-500">
+                                <span>Gizli Çalışma</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <label class="flex items-center gap-1 cursor-pointer">
+                                    <input type="radio" id="cl_theme_pink" name="cl_theme" checked class="accent-pink-500">
+                                    <span>Pembe Tema</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 9. Textarea -->
+                        <div>
+                            <label class="block font-bold text-slate-500 mb-1 uppercase text-[9px]">Fikir Açıklama Defteri (Textarea)</label>
+                            <textarea id="cl_ideas" rows="2" class="w-full p-2 bg-white/70 border-none outline-none rounded-2xl text-xs shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)] text-slate-700" placeholder="Fikirlerinizi buraya yazın..."></textarea>
+                        </div>
+
+                        <!-- 10. Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[8px] text-slate-400">
+                                <span>Yükleme Durumu (Progress)</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="w-full h-3 bg-white/50 rounded-full overflow-hidden p-0.5 shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)]">
+                                <div class="w-[90%] h-full bg-pink-400 rounded-full shadow-[inset_2px_2px_4px_rgba(255,255,255,0.4)]"></div>
+                            </div>
+                        </div>
+
+                        <!-- 11. Bulut Dosyalar Tablo Listesi -->
+                        <div class="bg-white/50 p-2 rounded-2xl shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05)] text-[9px] text-slate-500 max-h-12 overflow-y-auto">
+                            <div class="flex justify-between border-b border-pink-100 pb-0.5">
+                                <span>DOSYA</span>
+                                <span>DURUM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>clay_design_draft.png</span>
+                                <span class="text-pink-500 font-bold">Kaydedildi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 12. Buttons -->
+                    <div class="flex gap-2 justify-end pt-3 border-t border-pink-100 dark:border-pink-900 mt-3">
+                        <button id="cl_btn_clear" class="px-3 py-1.5 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-[4px_4px_10px_rgba(0,0,0,0.05)] active:shadow-inner">Temizle</button>
+                        <button id="cl_btn_save" class="px-4 py-1.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-full shadow-[4px_4px_10px_rgba(244,63,94,0.3)] active:shadow-inner">Kaydet</button>
+                    </div>
+                </div>`
+            }
+        ];
+
+        let activeStyle = designStyles[0];
+
+        // SAYFA YÜKLENDİĞİNDE BAŞLAT
+        window.onload = function() {
+            renderSidebar();
+            selectStyle(1);
+            generateMatrix();
+
+            // Tema Değiştirici Dinleyicisi
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+            });
+
+            // KÜRESEL OLAY DİNLEYİCİ SİSTEMİ (Interaktivite)
+            document.getElementById('demoContainer').addEventListener('input', function(e) {
+                let id = e.target.id || e.target.name || 'Bilinmeyen Girdi';
+                let val = e.target.value;
+                if (e.target.type === 'checkbox') val = e.target.checked;
+                
+                // Olay günlüğüne yaz
+                logEvent(`[Form Girdisi] ID: ${id} -> Yeni Değer: ${val}`);
+
+                // Eğer bir range slider ise anlık değer etiketini güncelle
+                let valLabel = document.getElementById(id + 'Val');
+                if (valLabel) {
+                    valLabel.innerText = val;
+                }
+            });
+
+            document.getElementById('demoContainer').addEventListener('change', function(e) {
+                let id = e.target.id || e.target.name || 'Bilinmeyen Girdi';
+                logEvent(`[Aksiyon Tetiklendi] Değişim Yapılan Öğe: ${id}`);
+            });
+        };
+
+        // EVENT LOG PANELI KONTROLÜ
+        function logEvent(message) {
+            const logPanel = document.getElementById('eventLog');
+            const p = document.createElement('p');
+            p.innerText = `> ${message}`;
+            logPanel.appendChild(p);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+
+        // CUSTOMIZER GÜNCELLEMELERİ (Anlık Değişken Atamaları)
+        function updateCustomizer() {
+            const radius = document.getElementById('inputRadius').value;
+            const padding = document.getElementById('inputPadding').value;
+
+            document.getElementById('labelRadius').innerText = `${radius}px`;
+            document.getElementById('labelPadding').innerText = `${padding}px`;
+
+            // CSS Değişkenlerini HTML Elemanına Aktar
+            const previewEl = document.querySelector('#demoContainer > div');
+            if (previewEl) {
+                previewEl.style.setProperty('--custom-radius', `${radius}px`);
+                previewEl.style.setProperty('--custom-padding', `${padding}px`);
+            }
+
+            // MD Prompt Dosyasını Yenile
+            generateMdRules();
+        }
+
+        function setThemeColor(colorName) {
+            const colors = {
+                'indigo-600': '#4f46e5',
+                'emerald-500': '#10b981',
+                'rose-500': '#f43f5e',
+                'cyan-400': '#22d3ee',
+                'amber-500': '#f59e0b'
+            };
+            const previewEl = document.querySelector('#demoContainer > div');
+            if (previewEl) {
+                previewEl.style.setProperty('--accent-color', colors[colorName]);
+            }
+            logEvent(`Vurgu rengi değiştirildi: ${colorName}`);
+            generateMdRules();
+        }
+
+        // SOL MENÜYÜ YAZDIRMA
+        function renderSidebar() {
+            const menuContainer = document.getElementById('stylesMenu');
+            menuContainer.innerHTML = '';
+
+            designStyles.forEach(style => {
+                const link = document.createElement('a');
+                link.href = `#style-${style.id}`;
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    selectStyle(style.id);
+                };
+                link.id = `sidebar-link-${style.id}`;
+                link.className = "flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-950 dark:hover:text-slate-100 text-xs font-semibold cursor-pointer transition-all";
+                link.innerHTML = `
+                    <div class="flex items-center space-x-3 truncate">
+                        <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center shrink-0">
+                            <i class="${style.icon}"></i>
+                        </div>
+                        <span class="truncate">${style.id}. ${style.name}</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-[10px] opacity-0 transition-opacity shrink-0"></i>
+                `;
+                menuContainer.appendChild(link);
+            });
+        }
+
+        // SEKME SEÇİCİ (SAĞ PANEL)
+        function switchRightTab(tabName) {
+            const tabSecrets = document.getElementById('tabBtnSecrets');
+            const tabCustomize = document.getElementById('tabBtnCustomize');
+            const tabMd = document.getElementById('tabBtnMd');
+            
+            const contentSecrets = document.getElementById('tabContentSecrets');
+            const contentCustomize = document.getElementById('tabContentCustomize');
+            const contentMd = document.getElementById('tabContentMd');
+
+            // Tüm sekmeleri pasif yap
+            [tabSecrets, tabCustomize, tabMd].forEach(t => t.className = "flex-1 py-3 px-2 text-center font-semibold text-xs border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white flex items-center justify-center gap-1.5 transition-all");
+            [contentSecrets, contentCustomize, contentMd].forEach(c => c.classList.add('hidden'));
+
+            if (tabName === 'secrets') {
+                tabSecrets.className = "flex-1 py-3 px-2 text-center font-bold text-xs border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-1.5";
+                contentSecrets.classList.remove('hidden');
+            } else if (tabName === 'customize') {
+                tabCustomize.className = "flex-1 py-3 px-2 text-center font-bold text-xs border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-1.5";
+                contentCustomize.classList.remove('hidden');
+            } else {
+                tabMd.className = "flex-1 py-3 px-2 text-center font-bold text-xs border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-1.5";
+                contentMd.classList.remove('hidden');
+                generateMdRules();
+            }
+        }
+
+        // STİL SEÇME VE DETAYLARINI YÜKLEME
+        function selectStyle(id) {
+            activeStyle = designStyles.find(s => s.id === id);
+            if (!activeStyle) return;
+
+            // Aktif Sınıfı Sidebar'da Güncelle
+            designStyles.forEach(s => {
+                const element = document.getElementById(`sidebar-link-${s.id}`);
+                if (element) {
+                    if (s.id === id) {
+                        element.classList.add('bg-indigo-50', 'dark:bg-indigo-950/40', 'text-indigo-600', 'dark:text-indigo-400');
+                        element.classList.remove('text-slate-600', 'dark:text-slate-400');
+                        element.querySelector('i.fa-chevron-right').classList.remove('opacity-0');
+                    } else {
+                        element.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/40', 'text-indigo-600', 'dark:text-indigo-400');
+                        element.classList.add('text-slate-600', 'dark:text-slate-400');
+                        element.querySelector('i.fa-chevron-right').classList.add('opacity-0');
+                    }
+                }
+            });
+
+            // Gerekli Detayları Doldur
+            document.getElementById('activeStyleId').innerText = `STIL-${activeStyle.id}`;
+            document.getElementById('activeStyleName').innerText = activeStyle.name;
+            document.getElementById('activeStyleDesc').innerText = activeStyle.desc;
+            document.getElementById('activeStyleApp').innerText = activeStyle.app;
+            document.getElementById('cssClassesBlock').innerText = activeStyle.classes;
+
+            // İpuçlarını Doldur
+            const tipsContainer = document.getElementById('styleTips');
+            tipsContainer.innerHTML = '';
+            activeStyle.tips.forEach(tip => {
+                const li = document.createElement('li');
+                li.innerText = tip;
+                tipsContainer.appendChild(li);
+            });
+
+            // Örnek Uygulama Etiketleri
+            const useCasesContainer = document.getElementById('useCasesContainer');
+            useCasesContainer.innerHTML = '';
+            activeStyle.useCases.forEach(uc => {
+                const span = document.createElement('span');
+                span.className = "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] px-2 py-1 rounded-md font-medium border border-slate-200/50 dark:border-slate-700/50";
+                span.innerText = uc;
+                useCasesContainer.appendChild(span);
+            });
+
+            // HTML Önizlemesini Değiştir
+            const demoContainer = document.getElementById('demoContainer');
+            demoContainer.style.opacity = '0';
+            setTimeout(() => {
+                demoContainer.innerHTML = activeStyle.html;
+                demoContainer.style.opacity = '1';
+                
+                // Varsayılan özel değişkenleri ata
+                updateCustomizer();
+            }, 150);
+
+            logEvent(`Stil seçildi: ${activeStyle.name}`);
+        }
+
+        // MD KURAL DOSYASINI DINAMIK OLARAK OLUSTURAN FONKSIYON
+        function generateMdRules() {
+            if (!activeStyle) return;
+
+            const radius = document.getElementById('inputRadius')?.value || '12';
+            const padding = document.getElementById('inputPadding')?.value || '20';
+
+            const mdContent = `# Tasarım Kuralı: ${activeStyle.name}
+## Tasarım Tarzı Analizi
+${activeStyle.desc}
+
+## Sınıflar ve CSS Tanımları
+\`\`\`css
+/* Ana Sınıf Grupları */
+${activeStyle.classes}
+
+/* Live Customizer Değişkenleri */
+--custom-radius: ${radius}px;
+--custom-padding: ${padding}px;
+\`\`\`
+
+## AI Geliştirici Talimatları (System Instruction)
+Kullanıcı sizden bir web arayüzü veya bileşen oluşturmanızı istediğinde, aşağıdaki yönergelere SIKICA bağlı kalın:
+
+${activeStyle.tips.map((tip, idx) => `${idx + 1}. **${tip}**`).join('\n')}
+
+## Uygun Kullanım Senaryoları
+${activeStyle.useCases.map(uc => `- ${uc}`).join('\n')}
+
+## UI Örnek Kod İskeleti (Geliştirici Şablonu - 10+ Aktif Form Bileşeni İçerir)
+Arayüz bileşenini oluştururken aşağıdaki iskelet kuralını uygulayın:
+\`\`\`html
+<!-- ${activeStyle.name} Arayüz Bileşeni -->
+${activeStyle.html.trim()}
+\`\`\`
+`;
+            document.getElementById('mdRulesCodeBlock').innerText = mdContent;
+        }
+
+        // TÜM MATRİSİ RENDER ETMEK
+        function generateMatrix() {
+            const matrixContainer = document.getElementById('matrixGrid');
+            matrixContainer.innerHTML = '';
+
+            designStyles.forEach(style => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 dark:bg-slate-950/50 p-5 rounded-xl border border-slate-200/60 dark:border-slate-800/80 flex flex-col justify-between hover:border-indigo-500 transition-all cursor-pointer";
+                card.onclick = () => {
+                    selectStyle(style.id);
+                    hideStylesMatrix();
+                };
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 font-mono text-[10px] px-2 py-0.5 rounded font-bold">STIL-${style.id}</span>
+                            <h4 class="font-bold text-sm truncate">${style.name}</h4>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4">${style.desc}</p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Uyumlu Alan:</span>
+                        <p class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">${style.app}</p>
+                    </div>
+                `;
+                matrixContainer.appendChild(card);
+            });
+        }
+
+        // KOPYALAMA İŞLEVLERİ
+        function copyCSS() {
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = activeStyle.classes;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+
+            showToast("CSS Sınıfları başarıyla kopyalandı!");
+        }
+
+        function copyMdRules() {
+            const mdContent = document.getElementById('mdRulesCodeBlock').innerText;
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = mdContent;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+
+            showToast("AI .MD Kural dosyası başarıyla kopyalandı!");
+        }
+
+        // TOAST GÖSTER
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = message;
+            toast.className = toast.className.replace('translate-y-20 opacity-0', 'translate-y-0 opacity-100');
+            
+            setTimeout(() => {
+                toast.className = toast.className.replace('translate-y-0 opacity-100', 'translate-y-20 opacity-0');
+            }, 3000);
+        }
+
+        // MODAL KONTROLLERİ
+        function showStylesMatrix() {
+            document.getElementById('matrixModal').classList.remove('hidden');
+        }
+        function hideStylesMatrix() {
+            document.getElementById('matrixModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

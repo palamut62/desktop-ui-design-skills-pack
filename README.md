@@ -5,6 +5,7 @@
 </p>
 
 <p align="center">
+  <a href="https://desktop-ui-design-skills.vercel.app">Live Demo</a> ·
   <a href="./skills">Skills</a> ·
   <a href="./ALL_SKILLS.md">All Skills</a> ·
   <a href="./AGENTS.md">Codex Instructions</a>
@@ -14,6 +15,7 @@
   <img alt="Skills" src="https://img.shields.io/badge/skills-20-4f46e5">
   <img alt="Format" src="https://img.shields.io/badge/format-Markdown-111827">
   <img alt="Target" src="https://img.shields.io/badge/target-Desktop%20UI-2563eb">
+  <img alt="Vercel" src="https://img.shields.io/badge/demo-Vercel-000000">
   <img alt="Codex" src="https://img.shields.io/badge/Codex-ready-10b981">
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-ready-f59e0b">
   <img alt="License" src="https://img.shields.io/badge/license-TODO-lightgrey">
@@ -44,6 +46,8 @@
 Desktop UI Design Skills Pack is a Markdown-based design system library for AI coding tools. Each skill describes a complete desktop UI style: visual identity, layout anatomy, color tokens, typography, components, interaction states, acceptance criteria, and a production-oriented generation prompt.
 
 The pack currently includes **20 skills**. It covers all 19 design styles from the local design playground source and keeps one additional modern enterprise WinForms skill for practical VB.NET/C# desktop applications.
+
+Live playground: [https://desktop-ui-design-skills.vercel.app](https://desktop-ui-design-skills.vercel.app)
 
 Target users:
 
@@ -306,4 +310,3 @@ TODO: Add a license file before publishing this repository as a public reusable 
 ## Acknowledgments
 
 Built for AI-assisted desktop UI generation workflows across Codex, Claude Code, and similar coding agents.
-
