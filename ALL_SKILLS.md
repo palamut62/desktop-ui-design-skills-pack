@@ -2443,3 +2443,1156 @@ VB.NET/C# Windows Forms App için modern, sade ve kurumsal bir masaüstü arayü
 
 ## Not
 Bu skill, seçilen tasarımı eksiksiz üretmek için görsel ve teknik yönlendirme sağlar. WinForms CSS kullanmadığı için bu dosyada CSS yerine **tasarım tokenları, kontrol stilleri ve C#/VB.NET örnekleri** verilmiştir.
+
+
+---
+name: floating-tool-window
+description: Her zaman ustte duran, koseye sabitlenebilen, kompakt ama islevsel mini masaustu arac pencereleri tasarlar. OCR capture, clipboard manager, quick launcher, color picker, screenshot tool ve hizli not panelleri icin kullanilir.
+---
+
+# Skill 12 - Floating Tool Window
+
+## Amac
+Bu skill, masaustu uygulamalarinda **Floating Tool Window** stilini tutarli sekilde uretmek icin kullanilir. Hedef; ana uygulama alanini kaplamadan kullaniciya hizli araclar, mikro formlar, anlik durumlar ve tek tiklik aksiyonlar sunan kompakt pencereler tasarlamaktir.
+
+Bu stil HTML oyun alanindaki `Floating Tool Window` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- OCR capture, clipboard manager, screenshot tool, color picker, quick launcher veya ekran ustu mini yardimci araclarda.
+- Kullanici ana is akisini bozmadan hizli ayar, yakalama, kopyalama, pinleme veya calistirma aksiyonu yapacaksa.
+- Uygulama her zaman ustte, ekran kosesinde, system tray yakininda veya secili alan ustunde calisacaksa.
+- Electron, Tauri, WPF, WinUI, Avalonia, PyQt veya WinForms ile kucuk yardimci masaustu araci uretilirken.
+
+## Gorsel kimlik
+- **Atmosfer:** Kompakt, hizli, araca odakli, hafif ve her zaman erisilebilir.
+- **Kompozisyon:** Baslik/drag alani, mikro kontrol grubu, durum satiri ve birincil aksiyon alani.
+- **Boyut:** Varsayilan genislik 220-360px; yukseklik 180-420px araliginda kalmali.
+- **Bosluk:** 6-8px mikro spacing, 10-12px grup spacing, 12-16px dis padding.
+- **Kose:** 10-16px radius modern arac hissi verir; sistem/legacy hedefte 4-8px tercih edilebilir.
+- **Golge:** Pencereyi arka plandan ayirmak icin tek ve net elevation kullan.
+- **Kontrast:** Kucuk metinler nedeniyle renk kontrasti yuksek olmali.
+
+## Renk paleti
+- `#FFFFFF` - ana yuzey
+- `#F8FAFC` - ikincil yuzey
+- `#E2E8F0` - border
+- `#4F46E5` - vurgu
+- `#0F172A` - ana metin
+- `#64748B` - ikincil metin
+- `#10B981` - basari
+- `#F59E0B` - uyari
+- `#EF4444` - kritik
+
+## Tipografi
+- **Ana font:** Inter, Segoe UI, system-ui
+- **Baslik:** 12-14px, 700 weight
+- **Govde:** 11-12px, 500 weight
+- **Mikro metin:** 9-10px, 600 weight
+- **Kod/path/kisayol:** JetBrains Mono veya SF Mono, 10-11px
+
+## Yerlesim sistemi
+1. Ust drag bar: ikon, kisa baslik, pin/close/minimize aksiyonlari.
+2. Hizli durum satiri: aktif mod, secili kaynak, baglanti veya izin durumu.
+3. Mikro form: input, select, toggle, slider veya segmented mode.
+4. Preview alani: yakalanan metin, pano icerigi, renk swatch veya son sonuc.
+5. Aksiyon satiri: primary button + secondary icon buttons.
+
+## Bilesenler
+- Floating shell
+- Drag handle / title bar
+- Pin toggle
+- Compact icon button
+- Mini search input
+- Mode segmented control
+- Source selector
+- Capture preview
+- Shortcut chip
+- Status pill
+- Progress strip
+- Toast / copied state
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --tool-bg: #ffffff;
+  --tool-bg-muted: #f8fafc;
+  --tool-border: #e2e8f0;
+  --tool-text: #0f172a;
+  --tool-muted: #64748b;
+  --tool-primary: #4f46e5;
+  --tool-success: #10b981;
+  --tool-warning: #f59e0b;
+  --tool-danger: #ef4444;
+  --tool-radius: 14px;
+  --tool-shadow: 0 20px 50px rgba(15,23,42,.18);
+  --tool-space-xs: 6px;
+  --tool-space-sm: 8px;
+  --tool-space-md: 12px;
+  --tool-space-lg: 16px;
+}
+
+.floating-tool {
+  width: min(340px, calc(100vw - 24px));
+  background: var(--tool-bg);
+  color: var(--tool-text);
+  border: 1px solid var(--tool-border);
+  border-radius: var(--tool-radius);
+  box-shadow: var(--tool-shadow);
+}
+```
+
+## Etkilesim kurallari
+- Pencere drag edilebilir olmali; drag alani input/button ile karismamali.
+- Pin state acikca gorunmeli; pinned olmayan pencere focus kaybinda otomatik kuculebilir.
+- Kapatma ve minimize aksiyonlari cok kucuk hedef olmamali; minimum 28x28px tiklama alani saglanmali.
+- Klavye kisayolu ile ac/kapat desteklenmeli; kapaninca focus onceki uygulamaya donmeli.
+- Ekran kenarina yaklastiginda snap hissi verilebilir.
+- Uzun islemde primary button loading veya cancel durumuna gecmeli.
+- Kopyalama/yakalama sonrasi toast ve event log benzeri kisa geri bildirim verilmeli.
+
+## Yap
+- Kompakt ol ama kontrol anlamlarini gizleme.
+- Icon-only butonlarda tooltip ve accessible label kullan.
+- Pencerenin son konumunu ve pin durumunu kaydet.
+- Kucuk alanlarda metni truncate et; tam metin icin tooltip veya expand panel sun.
+- Her zaman ustte davranisini kullanici kontrolune birak.
+
+## Yapma
+- Mini pencereyi tam dashboard gibi doldurma.
+- Kritik islemleri tek tikla calistirma.
+- Kucuk metinlerde dusuk kontrast kullanma.
+- Pencereyi kapatma/minimize kontrollerinden mahrum birakma.
+- Ana uygulama uzerinde kalici olarak onemli icerigi kapatma.
+
+## AI uretim promptu
+
+```text
+Floating Tool Window stilinde kompakt bir masaustu arac penceresi tasarla. 280-340px genisliginde, her zaman ustte durabilen, drag bar, pin toggle, mini input/select/toggle kontrolleri, preview alani, status pill ve birincil aksiyon butonu olsun. Kucuk alanda okunabilirlik, klavye kisayolu, tooltip ve focus state zorunlu olsun. Tasarim tokenlarini bg, surface, border, text, primary, radius, shadow ve spacing olarak merkezi tanimla.
+```
+
+## Kabul kriterleri
+- Pencere kompakt ama islevsel gorunuyor.
+- Drag, pin, close/minimize ve primary action yuzeyleri net.
+- En az bir mikro form alani, bir status pill ve bir feedback/preview alani var.
+- Icon-only aksiyonlarda tooltip/accessibility dusunulmus.
+- 1366x768 ekranda pencere ana icerigi gereksiz kapatmiyor.
+
+
+---
+name: workspace-ui
+description: Dosya agaci, sekmeler, editor/detail alani, inspector paneli ve alt log/status paneli olan yogun masaustu calisma alani arayuzleri uretir. Codex, Claude Code, OpenCode, kural yoneticisi ve proje editorleri icin kullanilir.
+---
+
+# Skill 13 - Workspace UI
+
+## Amac
+Bu skill, kompleks is akislari icin **Workspace UI** tasarlamakta kullanilir. Hedef; dosya/proje navigasyonu, acik sekmeler, duzenleme alani, ayar/inspector paneli, terminal/log ve status bar gibi bolgeleri tutarli bir masaustu calisma ortamina yerlestirmektir.
+
+Bu stil HTML oyun alanindaki `Workspace UI` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- Codex, Claude Code, OpenCode veya agent kurallari yoneten uygulamalar.
+- Proje, dosya, prompt, skill, plugin veya konfigurasyon editorleri.
+- Kullanici ayni anda gezinme, duzenleme, onizleme, terminal/log ve ayar paneli gorecekse.
+- VS Code benzeri ama daha urune ozel bir workbench deneyimi isteniyorsa.
+
+## Gorsel kimlik
+- **Atmosfer:** Uretkenlik odakli, yogun ama kontrollu, profesyonel calisma ortami.
+- **Kompozisyon:** Activity/navigation, file tree, tabbed editor, inspector, bottom panel, status bar.
+- **Bosluk:** Yogun UI icin 4/8px grid; kart dashboard gibi genis bosluklardan kacin.
+- **Kose:** Workbench bolgelerinde 4-8px; modallar ve kartlarda 8-12px.
+- **Kontrast:** Panel ayrimlari border, arka plan tonu ve aktif state ile okunmali.
+- **Yogunluk:** Mouse/keyboard oncelikli masaustu icin 28-40px satir yukseklikleri kullanilabilir.
+
+## Renk paleti
+- `#0F172A` - dark shell
+- `#111827` - panel
+- `#1F2937` - raised panel
+- `#334155` - border
+- `#6366F1` - primary
+- `#22C55E` - success
+- `#F97316` - warning
+- `#E5E7EB` - text
+- `#94A3B8` - muted
+
+## Tipografi
+- **UI:** Inter, Segoe UI, system-ui
+- **Kod/path:** JetBrains Mono, Fira Code, SF Mono
+- **Baslik:** 13-16px, 700
+- **Panel label:** 10-11px, uppercase, 700
+- **Editor/log:** 12-13px monospace
+
+## Yerlesim sistemi
+1. Activity rail: 48-56px icon navigation.
+2. Explorer/sidebar: 220-280px file/project tree.
+3. Editor tabs: 32-40px yukseklik, dirty state ve close icon.
+4. Main editor/detail: fill area, scroll sadece editor icinde.
+5. Inspector/settings panel: 300-420px, secili oge ayarlari.
+6. Bottom panel: terminal, output, problems, event log tabs.
+7. Status bar: branch, errors, sync, model, workspace path.
+
+## Bilesenler
+- Activity rail item
+- File tree item
+- Editor tab
+- Breadcrumb
+- Split editor group
+- Inspector form row
+- Problems/output panel
+- Terminal/log panel
+- Status bar item
+- Command palette trigger
+- Dirty state badge
+- Empty editor state
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --ws-bg: #0f172a;
+  --ws-panel: #111827;
+  --ws-panel-2: #1f2937;
+  --ws-border: #334155;
+  --ws-text: #e5e7eb;
+  --ws-muted: #94a3b8;
+  --ws-primary: #6366f1;
+  --ws-success: #22c55e;
+  --ws-warning: #f97316;
+  --ws-danger: #ef4444;
+  --ws-row: 32px;
+  --ws-radius: 8px;
+  --ws-space: 8px;
+}
+
+.workspace-shell {
+  display: grid;
+  grid-template-columns: 52px 260px minmax(0, 1fr) 360px;
+  grid-template-rows: 40px minmax(0, 1fr) 180px 24px;
+  background: var(--ws-bg);
+  color: var(--ws-text);
+}
+```
+
+## Etkilesim kurallari
+- Paneller resize edilebilir olmali; min/default/max genislikler tanimlanmali.
+- Sekmeler klavye ile gezilebilir, kapanabilir ve dirty state kaybolmadan gorunmelidir.
+- Dosya agacinda secili, hover, focus, expanded ve modified durumlari ayri gorunmeli.
+- Inspector paneli secili oge yokken empty state gostermeli.
+- Bottom panel terminal/output/problems arasinda tab ile gecis yapmali.
+- Status bar global bilgi solda, baglamsal bilgi sagda olacak sekilde ayrilmali.
+- Kapatilan panel geri getirilebilir olmali; kullanici layoutu kilitlememeli.
+
+## Yap
+- Workbench bolgelerini ayni border ve spacing sistemiyle kur.
+- Log, terminal ve editor icin monospace kullan; genel UI metninde sans fonta don.
+- Panel basliklarina kisa toolbar aksiyonlari ekle.
+- Komut paletini tum bolgeler icin ortak aksiyon yuzeyi yap.
+- Empty, loading, unsaved, error ve disconnected durumlarini tasarla.
+
+## Yapma
+- Her paneli kart gibi kalin shadow ile ayirma.
+- Status bar'i reklam veya uzun metin alani gibi kullanma.
+- Inspector panelini ana icerigin yerine gecirme.
+- Dosya agacinda cok buyuk satir yuksekligi kullanma.
+- Kaydedilmemis degisiklikleri yalnizca renk ile belirtme.
+
+## AI uretim promptu
+
+```text
+Workspace UI stilinde yogun bir masaustu calisma alani tasarla. Solda activity rail ve file tree, ortada tabbed editor/detail alani, sagda inspector/settings paneli, altta terminal-output-problems paneli ve en altta status bar olsun. Panel resize, tab dirty state, empty state, error state, keyboard navigation ve command palette trigger desteklensin. Tokenlar dark shell, panel, border, text, muted, primary, row height, radius ve spacing olarak merkezi tanimlansin.
+```
+
+## Kabul kriterleri
+- Activity rail, sidebar, editor, inspector, bottom panel ve status bar ayrimi net.
+- Her panelin kendi scroll davranisi var.
+- Sekme, dirty state ve secili dosya durumu gorunuyor.
+- Klavye/focus akisi workbench icinde kesintisiz.
+- 1366x768 ve 1920x1080 masaustu ekranlarda yogunluk bozulmuyor.
+
+
+
+---
+name: settings-first-ui
+description: API anahtari, model secimi, guvenlik, entegrasyon, faturalandirma ve hassas konfigurasyon formlarina odaklanan ayar merkezli masaustu arayuzleri uretir.
+---
+
+# Skill 14 - Settings-First UI
+
+## Amac
+Bu skill, kullanicinin ana gorevinin konfigurasyon yapmak oldugu uygulamalar icin **Settings-First UI** tasarlar. Hedef; karmasik ayarlari guvenli, gruplanmis, dogrulanabilir ve geri alinabilir bicimde sunmaktir.
+
+Bu stil HTML oyun alanindaki `Settings-First UI` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- OpenRouter, DeepSeek, NVIDIA, GitHub, SMTP, veritabani veya SaaS entegrasyon ayarlari.
+- API key, secret, token, model, quota, billing, proxy, endpoint, permission ve workspace ayarlari.
+- Kullanici kaydetmeden once test, dogrulama, maskeleme ve reset ihtiyaci duyacaksa.
+- Masaustu admin paneli veya agent configuration manager yapilirken.
+
+## Gorsel kimlik
+- **Atmosfer:** Guven veren, sakin, kontrollu, ayar odakli.
+- **Kompozisyon:** Sol kategori listesi, sag ayar gruplari, sticky save bar.
+- **Bosluk:** Form gruplari arasinda 20-28px, satir icinde 8-12px.
+- **Kose:** 8-12px radius; ayar satirlarinda gereksiz dekor yok.
+- **Kontrast:** Label, aciklama, input ve hata metni hiyerarsisi belirgin.
+- **Guvenlik:** Hassas degerler maskeli, kopyalama/gosterme/test aksiyonlari kontrollu.
+
+## Renk paleti
+- `#F8FAFC` - background
+- `#FFFFFF` - surface
+- `#E2E8F0` - border
+- `#2563EB` - primary
+- `#0F172A` - text
+- `#64748B` - muted
+- `#10B981` - valid
+- `#F59E0B` - warning
+- `#EF4444` - invalid/destructive
+
+## Tipografi
+- **Ana font:** Inter, Segoe UI, system-ui
+- **Sayfa basligi:** 20-24px, 700
+- **Grup basligi:** 13-15px, 700
+- **Label:** 12-13px, 600
+- **Aciklama:** 11-12px, 400-500
+- **Secret/code:** monospace, 12px
+
+## Yerlesim sistemi
+1. Sol settings nav: kategori ve durum indicator.
+2. Page header: baslik, aciklama, global search.
+3. Section card: baslik, aciklama, form rows.
+4. Sensitive input row: masked value, reveal, copy, rotate/test.
+5. Validation summary: sorunlar ve cozum aksiyonlari.
+6. Sticky footer/save bar: unsaved state, reset, test, save.
+
+## Bilesenler
+- Settings navigation item
+- Form field row
+- Secret input
+- Reveal/copy icon button
+- Endpoint input
+- Model selector
+- Numeric stepper
+- Toggle row
+- Radio card group
+- Validation message
+- Test connection button
+- Sticky save bar
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --settings-bg: #f8fafc;
+  --settings-surface: #ffffff;
+  --settings-border: #e2e8f0;
+  --settings-text: #0f172a;
+  --settings-muted: #64748b;
+  --settings-primary: #2563eb;
+  --settings-valid: #10b981;
+  --settings-warning: #f59e0b;
+  --settings-danger: #ef4444;
+  --settings-radius: 12px;
+  --settings-row: 44px;
+  --settings-gap: 16px;
+}
+```
+
+## Etkilesim kurallari
+- Hassas input varsayilan olarak maskeli olmali; reveal gecici olabilir.
+- Copy action toast vermeli ama secret degerini ekranda kalici gostermemeli.
+- Save butonu sadece degisiklik varsa belirginlesmeli.
+- Test connection islemi save'den ayrilmali; sonuc inline status olarak gosterilmeli.
+- Hata mesajlari ilgili input altinda ve sayfa ustu ozetinde gorunmeli.
+- Destructive reset/rotate key aksiyonlari onay istemeli.
+- Klavye ile label-input-yardim-hata akisi mantikli olmalidir.
+
+## Yap
+- Ayarlari kategori ve risk seviyesine gore grupla.
+- Her input icin aciklama ve dogrulama kriteri ver.
+- Unsaved changes durumunu net goster.
+- Toggle ve radio ayarlarini satir aciklamasiyla destekle.
+- Test, save, reset ve destructive aksiyonlari gorsel olarak ayir.
+
+## Yapma
+- API key gibi degerleri duz metin olarak gostermeye baslama.
+- Cok fazla ayari tek uzun formda araliksiz yigma.
+- Hata mesajlarini sadece toast ile gecici gostermek.
+- Kaydetmeden ayrilma uyarisi olmadan sayfa degistirmek.
+- Primary renkleri her ayar satirinda dekor olarak kullanmak.
+
+## AI uretim promptu
+
+```text
+Settings-First UI stilinde bir API/model ayar paneli tasarla. Sol kategori navigasyonu, sagda ayar bolumleri, maskeli API key inputlari, endpoint/model selector, numeric stepper, toggle row, radio card group, inline validation, test connection ve sticky save bar olsun. Hassas veriler varsayilan maskeli gelsin. Unsaved, valid, invalid, loading ve destructive confirmation durumlarini ekle.
+```
+
+## Kabul kriterleri
+- Ayar kategorileri ve form bolumleri net.
+- Secret alanlari maskeli ve reveal/copy/test aksiyonlari kontrollu.
+- Inline validation ve sticky save bar var.
+- Hata, basari, warning ve unsaved state gorunuyor.
+- Klavye navigasyonu ve focus state eksik degil.
+
+
+
+---
+name: data-table-admin-ui
+description: Filtrelenebilir veri tablolari, arama, status badge, bulk action, pagination ve detay paneli olan yogun admin arayuzleri uretir.
+---
+
+# Skill 15 - Data Table Admin UI
+
+## Amac
+Bu skill, liste yonetimi ve operasyonel admin ekranlari icin **Data Table Admin UI** standardi saglar. Hedef; cok sayida kaydi tarama, filtreleme, siralama, secme, toplu islem ve detay inceleme akisini hizli ve guvenilir hale getirmektir.
+
+Bu stil HTML oyun alanindaki `Data Table Admin UI` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- Repo cleaner, dosya analiz, abonelik listesi, kullanici yonetimi, stok/personel/CRM listeleri.
+- Kayit sayisi fazla, kolonlar cesitli ve bulk action gerekiyorsa.
+- Kullanici filtre, arama, siralama, secim ve detay paneli arasinda hizli calisacaksa.
+- Web/Electron, WinForms DataGridView, WPF DataGrid, Avalonia DataGrid veya PyQt table view hedefleniyorsa.
+
+## Gorsel kimlik
+- **Atmosfer:** Operasyonel, okunabilir, yogun, hizli taranabilir.
+- **Kompozisyon:** Toolbar, filtre chipleri, tablo, bulk action bar, pagination, detail drawer.
+- **Bosluk:** Tablo satiri 40-52px; toolbar 48-64px.
+- **Kose:** Tablo container 8-12px; satirlar genellikle radius kullanmaz.
+- **Kontrast:** Header, zebra, hover, selected ve focus state ayrilmali.
+- **Veri hiyerarsisi:** Ana kolon daha guclu, metadata ve status daha dusuk vurgu ile verilmeli.
+
+## Renk paleti
+- `#F8FAFC` - page bg
+- `#FFFFFF` - table surface
+- `#E2E8F0` - border/grid
+- `#F1F5F9` - header/zebra
+- `#2563EB` - selected/primary
+- `#0F172A` - text
+- `#64748B` - muted
+- `#10B981` - active/success
+- `#F59E0B` - pending/warning
+- `#EF4444` - error/destructive
+
+## Tipografi
+- **Table text:** 12-14px
+- **Header:** 11-12px, uppercase veya semibold
+- **Badge:** 10-11px, 700
+- **Toolbar:** 12-13px
+- **Numeric columns:** tabular nums veya monospace tercih edilebilir
+
+## Yerlesim sistemi
+1. Top toolbar: title, search, saved views, primary action.
+2. Filter row: dropdown filters, date range, active chips.
+3. Bulk action bar: selected count, export, archive, delete.
+4. Data table: checkbox, primary field, metadata, status, actions.
+5. Pagination/footer: count, page size, page controls.
+6. Detail drawer: selected row details and edit form.
+
+## Bilesenler
+- Search input
+- Filter dropdown
+- Date range picker
+- Active filter chip
+- Column header sort
+- Row checkbox
+- Status badge
+- Inline action menu
+- Bulk action bar
+- Empty table state
+- Error/retry state
+- Pagination control
+- Detail drawer
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --table-bg: #f8fafc;
+  --table-surface: #ffffff;
+  --table-header: #f1f5f9;
+  --table-border: #e2e8f0;
+  --table-text: #0f172a;
+  --table-muted: #64748b;
+  --table-primary: #2563eb;
+  --table-selected: #dbeafe;
+  --table-success: #10b981;
+  --table-warning: #f59e0b;
+  --table-danger: #ef4444;
+  --table-row-height: 46px;
+  --table-radius: 10px;
+}
+```
+
+## Etkilesim kurallari
+- Header click siralama yapmali; sort direction ikonla gorunmeli.
+- Checkbox secimi bulk action bar'i acmali.
+- Shift-click veya keyboard multi-select dusunulebilir.
+- Row hover ile selected state karismamali.
+- Actions menu satir sonunda ve keyboard ile erisilebilir olmali.
+- Filter degisince active chips guncellenmeli; tek tikla temizlenebilmeli.
+- Empty state filtre temizleme veya yeni kayit aksiyonu sunmali.
+- Loading state table skeleton olarak gelmeli; satirlar ziplamamali.
+
+## Yap
+- Kolon genisliklerini veri tipine gore planla.
+- Status degerlerini renk + metin + ikon ile ver.
+- Bulk delete gibi aksiyonlarda onay dialogu kullan.
+- Tabloda yatay scroll gerekiyorsa ilk kolon ve actions kolonu sticky olabilir.
+- Sayfa boyutu ve siralama tercihlerini kaydet.
+
+## Yapma
+- Cok uzun metinleri satir yuksekligini bozacak sekilde gostermek.
+- Tum kolonlari ayni onemde ve ayni genislikte yapmak.
+- Status'u yalnizca renkle anlatmak.
+- Bulk action bar olmadan coklu secim sunmak.
+- Hata durumunda tum tabloyu bos gibi gostermek.
+
+## AI uretim promptu
+
+```text
+Data Table Admin UI stilinde yogun bir admin liste ekrani tasarla. Ust toolbar, arama, filtre dropdownlari, aktif filtre chipleri, checkbox'li tablo satirlari, sortable kolonlar, status badge'leri, inline actions menu, bulk action bar, pagination ve sag detay drawer olsun. Loading skeleton, empty state, error retry, selected state ve destructive confirmation durumlarini ekle.
+```
+
+## Kabul kriterleri
+- Tablo toolbar, filtre, bulk action ve pagination ile tamamlanmis.
+- Satir secimi, selected state ve bulk action net.
+- Status badge ve sort state yalnizca renge bagli degil.
+- Empty/loading/error durumlari var.
+- Dar pencerede tablo yatay scroll veya kart listeye donusebiliyor.
+
+
+
+---
+name: ai-chat-tool-panel-ui
+description: Sol sohbet alani ve sag arac/parametre paneli olan AI destekli uretim, slayt, cheatsheet, kod ve belge arayuzleri uretir.
+---
+
+# Skill 16 - AI Chat + Tool Panel UI
+
+## Amac
+Bu skill, **AI Chat + Tool Panel UI** biciminde sohbet ve arac kontrolunu ayni ekranda birlestiren arayuzler uretir. Hedef; kullanicinin dogal dil ile AI'a talimat verirken, sag panelde parametreleri, export ayarlarini, kaynaklari ve calisma sonucunu yonetebilmesidir.
+
+Bu stil HTML oyun alanindaki `AI Chat + Tool Panel UI` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- AI kodlama asistani, smart_slayt, cheatsheet generator, prompt builder, rapor uretici.
+- Sohbet + tool call + preview/export akisi gerekiyorsa.
+- Kullanici hem konusma gecmisini hem de model/format/kaynak ayarlarini ayni anda gormek istiyorsa.
+- Agent workflow, RAG paneli, belge/slayt uretim araci veya developer assistant tasarlanirken.
+
+## Gorsel kimlik
+- **Atmosfer:** Akilli, uretken, odakli, iki panelli.
+- **Kompozisyon:** Sol chat stream, alt composer, sag tool settings, source/output paneli.
+- **Bosluk:** Chat mesajlari 12-16px gap; tool panel form rows 10-14px gap.
+- **Kose:** Chat bubble 12-18px; tool cards 8-12px.
+- **Kontrast:** AI, user, system, tool result mesajlari ayrilmali.
+- **Geri bildirim:** Streaming, thinking, tool running, success, blocked ve error durumlari net olmali.
+
+## Renk paleti
+- `#F8FAFC` - app bg
+- `#FFFFFF` - chat surface
+- `#F1F5F9` - user bubble
+- `#EEF2FF` - AI/tool highlight
+- `#4F46E5` - primary
+- `#0F172A` - text
+- `#64748B` - muted
+- `#10B981` - success
+- `#F59E0B` - tool running
+- `#EF4444` - error
+
+## Tipografi
+- **Chat message:** 13-15px, 1.45 line-height
+- **Tool label:** 11-12px, 600
+- **Code/tool output:** monospace, 12-13px
+- **Timestamp/meta:** 10-11px
+- **Primary action:** 12-13px, 700
+
+## Yerlesim sistemi
+1. Chat header: conversation title, model, status, new chat.
+2. Chat stream: user, assistant, system, tool result messages.
+3. Composer: input, attach, voice/shortcut, send, stop.
+4. Tool panel: model, temperature, format, source, export settings.
+5. Preview/export: generated artifact, download/copy/open actions.
+6. Activity/status: token usage, running tool, error summary.
+
+## Bilesenler
+- Chat message bubble
+- Streaming cursor
+- Tool call card
+- Source citation chip
+- Composer input
+- Attachment button
+- Send/stop button
+- Model selector
+- Temperature slider
+- Format radio group
+- Export settings panel
+- Preview card
+- Usage meter
+- Error/retry banner
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --ai-bg: #f8fafc;
+  --ai-surface: #ffffff;
+  --ai-panel: #f1f5f9;
+  --ai-assistant: #eef2ff;
+  --ai-border: #e2e8f0;
+  --ai-text: #0f172a;
+  --ai-muted: #64748b;
+  --ai-primary: #4f46e5;
+  --ai-success: #10b981;
+  --ai-warning: #f59e0b;
+  --ai-danger: #ef4444;
+  --ai-radius: 14px;
+  --ai-gap: 14px;
+}
+```
+
+## Etkilesim kurallari
+- Enter/Shift+Enter davranisi net olmali.
+- Streaming sirasinda send butonu stop/cancel aksiyonuna donmeli.
+- Tool call calisirken durum karti gorunmeli; tamamlaninca sonuc ozetlenmeli.
+- Kullanici kaynak/format/model degistirince yeni yanita etkisi belli olmali.
+- Hata durumunda retry, edit prompt veya fallback model aksiyonu sunulmali.
+- Uzun chat'te composer sticky kalmali.
+- Sag panel dar ekranda drawer veya tab olarak acilmali.
+
+## Yap
+- Sohbet ve tool ayarlarini birbirine bagla; panel sadece dekor olmasin.
+- AI mesajlarinda kaynak, tool sonucu ve aksiyonlari ayrik goster.
+- Copy/export/download aksiyonlarini gorunur tut.
+- Token/limit ve privacy durumlarini sakince belirt.
+- Empty state'te ornek promptlar sun.
+
+## Yapma
+- Tum ayarlari chat icine gommek.
+- Tool calisirken kullaniciyi sessiz bekletmek.
+- Error'u sadece kirmizi toast ile gostermek.
+- Uzun yanitlarda composer'i ekran disina itmek.
+- Model/format degisikligini kaydetmeden kaybolacak sekilde tasarlamak.
+
+## AI uretim promptu
+
+```text
+AI Chat + Tool Panel UI stilinde iki panelli bir masaustu arayuzu tasarla. Solda chat header, mesaj akisi, streaming state ve sticky composer; sagda model selector, temperature slider, kaynak secimi, output format radio group, export ayarlari, preview ve download/copy aksiyonlari olsun. Tool running, success, error, retry, empty state ve stop generating durumlarini ekle.
+```
+
+## Kabul kriterleri
+- Sol chat ve sag tool paneli ayni is akisini destekliyor.
+- Streaming, tool call, error ve retry durumlari var.
+- Composer sticky ve klavye davranisi net.
+- Export/copy/download aksiyonlari gorunur.
+- Dar pencerede sag panel davranisi tanimli.
+
+
+
+---
+name: classic-windows-form-ui
+description: Windows 95/98/2000 donemi retro masaustu estetigini, gri 3D cerceveleri, inset/outset kontrolleri ve legacy form davranisini bilincli olarak yeniden uretir.
+---
+
+# Skill 17 - Classic Windows Form UI
+
+## Amac
+Bu skill, modern WinForms standardindan farkli olarak **Classic Windows Form UI** yani retro/legacy Windows form estetigini tasarlamak icin kullanilir. Hedef; nostaljik, sistem araci hissi veren, piksel netliginde, 3D border'li ve sade form panelleri uretmektir.
+
+Bu stil HTML oyun alanindaki `Classic Windows Form` tasarimina karsilik gelir. Modern kurumsal WinForms icin `11-windows-forms-app-ui` kullanilmalidir.
+
+## Ne zaman kullanilmali?
+- Nostaljik sistem araci, retro database paneli, Win98 simulatoru, legacy admin tool veya egitim/demo arayuzu.
+- Bilincli olarak eski Windows 95/98/2000 hissi isteniyorsa.
+- Modern rounded/card tasarim degil, mekanik ve tanidik masaustu kontrol dili hedefleniyorsa.
+- VB.NET/C# WinForms, web retro UI, Electron veya WPF ile legacy gorunum taklit edilecekse.
+
+## Gorsel kimlik
+- **Atmosfer:** Retro, sistemsel, mekanik, keskin, nostaljik.
+- **Kompozisyon:** Title bar, group box, form grid, inset input, outset button, status strip.
+- **Renk:** Acik gri zemin, lacivert title bar, siyah metin, beyaz/koyu gri 3D kenarlar.
+- **Kose:** Radius yok veya 0-2px.
+- **Golge:** Modern blur shadow yok; 1-2px sert 3D border kullan.
+- **Tipografi:** MS Sans Serif, Tahoma, Segoe UI fallback; kucuk punto.
+
+## Renk paleti
+- `#D4D0C8` - klasik pencere zemini
+- `#C0C0C0` - kontrol yuzeyi
+- `#FFFFFF` - highlight edge
+- `#808080` - shadow edge
+- `#404040` - dark edge
+- `#000080` - active title bar
+- `#000000` - text
+- `#FFFFE1` - tooltip/info
+- `#FF0000` - kritik hata
+
+## Tipografi
+- **Ana font:** MS Sans Serif, Tahoma, Microsoft Sans Serif, Segoe UI
+- **Normal metin:** 8-9pt
+- **Group label:** 8-9pt, bold
+- **Button:** 8-9pt
+- **Status text:** 8pt
+- **Monospace alan:** Consolas veya Courier New, 8-9pt
+
+## Yerlesim sistemi
+1. Title bar: aktif lacivert, beyaz text, klasik minimize/maximize/close.
+2. Menu/toolbar: File/Edit/View/Help veya icon strip.
+3. GroupBox: alanlari mantikli gruplara ayirir.
+4. Form grid: label solda, input sagda.
+5. Data/list area: inset border ile ayrilir.
+6. Button row: OK, Cancel, Apply veya Baglan/Iptal.
+7. Status bar: hazir, baglanti, kayit sayisi.
+
+## Bilesenler
+- Win98 window
+- Title bar
+- Inset input
+- Outset button
+- Group box
+- Checkbox/radio
+- Combo box
+- Progress bar
+- Status strip
+- List view/table
+- Dialog button row
+- System message panel
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --classic-bg: #d4d0c8;
+  --classic-surface: #c0c0c0;
+  --classic-highlight: #ffffff;
+  --classic-shadow: #808080;
+  --classic-dark: #404040;
+  --classic-title: #000080;
+  --classic-text: #000000;
+  --classic-info: #ffffe1;
+  --classic-danger: #ff0000;
+  --classic-border-size: 2px;
+  --classic-space: 6px;
+}
+
+.classic-inset {
+  border: 2px solid;
+  border-color: var(--classic-shadow) var(--classic-highlight) var(--classic-highlight) var(--classic-shadow);
+}
+
+.classic-outset {
+  border: 2px solid;
+  border-color: var(--classic-highlight) var(--classic-shadow) var(--classic-shadow) var(--classic-highlight);
+}
+```
+
+## Etkilesim kurallari
+- Button active durumunda border yonu ters donmeli.
+- Focus rectangle klasik dotted outline olarak gorunebilir.
+- Dialoglarda Enter OK, Esc Cancel davranisi korunmali.
+- Inputlar inset, butonlar outset olmalidir.
+- Critical action varsayilan focus olmamali.
+- Progress bar segmentli veya sert dolgulu olabilir.
+- Modern animasyon kullanma; geri bildirim mekanik ve anlik olmali.
+
+## Yap
+- Retro stili bilincli ve tutarli uygula.
+- 3D border mantigini tum kontrollerde ayni yonle kullan.
+- GroupBox ve status bar ile eski masaustu hiyerarsisini kur.
+- Kucuk font kullanirken okunabilirligi test et.
+- Modern WinForms ile karistirmamak icin stil adini net tut.
+
+## Yapma
+- Retro pencereye modern gradient, blur veya yuvarlak kart ekleme.
+- Her kontrolu farkli gri tonuyla karistirma.
+- Kritik islemleri onaysiz calistirma.
+- Kucuk buton hedeflerini 24px altina dusurme.
+- Nostalji ugruna form hiyerarsisini bozma.
+
+## AI uretim promptu
+
+```text
+Classic Windows Form UI stilinde retro bir masaustu ayar/dialog penceresi tasarla. Gri #D4D0C8 zemin, lacivert title bar, inset inputlar, outset butonlar, GroupBox alanlari, klasik checkbox/radio/combo, progress bar ve status strip olsun. Radius kullanma, modern shadow/blur ekleme. Enter/Esc dialog davranisi, focus rectangle ve kritik islem onayi tasarla.
+```
+
+## Kabul kriterleri
+- Stil modern WinForms degil, bilincli retro Windows 95/98 hissi veriyor.
+- Inset/outset border mantigi tutarli.
+- GroupBox, dialog button row ve status bar var.
+- Klavye/focus davranisi klasik masaustu beklentisine uygun.
+- Modern blur/gradient/dekoratif kart dili kullanilmamis.
+
+
+---
+name: cyberpunk-hud-ui
+description: Neon, keskin kenarli, veri yogun, futuristik HUD ve kontrol paneli arayuzleri uretir. Oyun yonetim konsollari, sci-fi paneller ve siber guvenlik gosterge ekranlari icin kullanilir.
+---
+
+# Skill 18 - Cyberpunk HUD UI
+
+## Amac
+Bu skill, **Cyberpunk HUD UI** stilinde futuristik, neon vurgulu, keskin ve veri yogun arayuzler uretmek icin kullanilir. Hedef; oyun/sci-fi kontrol odasi hissi verirken okunabilirligi ve islevselligi kaybetmeyen bir panel sistemi kurmaktir.
+
+Bu stil HTML oyun alanindaki `Cyberpunk HUD UI` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- Sci-fi oyun yonetim paneli, ajan kontrol odasi, siber guvenlik tarayicisi, telemetry dashboard.
+- Veri yogun HUD, alarm paneli, network map veya otonom agent kontrol ekrani.
+- Markali/tematik bir arayuzde dramatik neon atmosfer isteniyorsa.
+- Utility veya kurumsal uygulamada sadece demo/tematik mod olarak kullanilmali.
+
+## Gorsel kimlik
+- **Atmosfer:** Futuristik, gergin, neon, keskin, teknik.
+- **Kompozisyon:** HUD frame, telemetry grid, status strips, alarm panels, command controls.
+- **Renk:** Siyah zemin, cyan/teal neon, magenta/kirmizi alarm, sari warning.
+- **Kose:** Keskin; gerekirse clip-path ile kirpilmis kose.
+- **Golge:** Glow kontrollu olmali; metin okunabilirligini bozmamali.
+- **Tipografi:** Monospace veya condensed tech font.
+
+## Renk paleti
+- `#000000` - ana zemin
+- `#020617` - panel zemin
+- `#0E7490` - derin cyan
+- `#22D3EE` - neon cyan
+- `#A855F7` - neon mor
+- `#F43F5E` - alarm
+- `#FACC15` - warning
+- `#D1FAE5` - okunabilir acik metin
+
+## Tipografi
+- **Ana font:** JetBrains Mono, Fira Code, Rajdhani, Orbitron fallback
+- **HUD label:** 9-11px, uppercase, letter spacing pozitif
+- **Panel basligi:** 14-18px, 800
+- **Data text:** 11-13px monospace
+- **Alarm:** 10-12px, 800
+
+## Yerlesim sistemi
+1. HUD header: sistem adi, threat/alarm status, timestamp.
+2. Telemetry grid: sensor, node, load, heat, signal kartlari.
+3. Command form: target, mode, shield, intensity, command textarea.
+4. Log/terminal strip: anlik olaylar.
+5. Alarm footer: abort, confirm, execute.
+6. Decorative scan lines sadece dusuk opaklikta.
+
+## Bilesenler
+- HUD frame
+- Neon border panel
+- Clipped corner card
+- Threat badge
+- Telemetry metric
+- Signal/progress bar
+- Target input
+- Mode selector
+- Command textarea
+- Alarm button
+- Abort button
+- Scanline overlay
+- Event log
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --cy-bg: #000000;
+  --cy-panel: #020617;
+  --cy-border: #0e7490;
+  --cy-neon: #22d3ee;
+  --cy-purple: #a855f7;
+  --cy-danger: #f43f5e;
+  --cy-warning: #facc15;
+  --cy-text: #d1fae5;
+  --cy-muted: #0891b2;
+  --cy-glow: 0 0 18px rgba(34,211,238,.35);
+  --cy-radius: 0px;
+  --cy-space: 12px;
+}
+
+.cy-panel {
+  background: var(--cy-panel);
+  color: var(--cy-neon);
+  border: 1px solid var(--cy-border);
+  box-shadow: var(--cy-glow);
+}
+```
+
+## Etkilesim kurallari
+- Hover glow artabilir ama metin blur olmamali.
+- Alarm/critical action iki asamali onay istemeli.
+- Running state scan/progress ile gosterilebilir.
+- Kirmizi yalnizca alarm ve destructive islerde kullanilmali.
+- Klavye focus neon outline ile belirgin olmali.
+- Animasyonlar 150-300ms ve dusuk opaklikta kalmali; motion azaltma destegi dusunulmeli.
+- Veri yogunlugunda grup basliklari ve divider kullan.
+
+## Yap
+- Neon efektleri tokenlastir.
+- Keskin border ve clipped-corner dilini tutarli kullan.
+- Veri yogunlugu ile aksiyon alanlarini ayir.
+- Error/warning/success durumlarini metin ve ikonla destekle.
+- Terminal/log alanini monospace tut.
+
+## Yapma
+- Her seyi glow ile okunmaz hale getirmek.
+- Mor/cyan/kirmizi renkleri rastgele dekor olarak dagitmak.
+- Sade is uygulamasini gereksiz cyberpunk yapmak.
+- Uzun paragraflari all-caps yazmak.
+- Kritik komutlari tek tikla calistirmak.
+
+## AI uretim promptu
+
+```text
+Cyberpunk HUD UI stilinde siyah zeminli, cyan neon border'li, keskin koseli bir kontrol paneli tasarla. Header'da sistem durumu, ortada telemetry grid, target input, mode selector, intensity slider, command textarea, signal/progress bar, event log ve abort/execute aksiyonlari olsun. Glow efektleri kontrollu, focus state belirgin, alarm ve destructive aksiyonlar onayli olsun.
+```
+
+## Kabul kriterleri
+- Cyberpunk/HUD atmosferi net ama okunabilir.
+- Neon border, telemetry, command form ve event log var.
+- Alarm/warning/normal durumlari ayriliyor.
+- Animasyon ve glow metin okunabilirligini bozmuyor.
+- Kritik aksiyonlar onayli.
+
+
+---
+name: neo-brutalism-ui
+description: Kalin siyah border, sert offset shadow, doygun pastel zeminler, duz koseler ve cesur tipografiyle modern neo-brutalist arayuzler uretir.
+---
+
+# Skill 19 - Neo-Brutalism UI
+
+## Amac
+Bu skill, **Neo-Brutalism UI** stilinde dikkat cekici, sert, renkli ve ozguvenli arayuzler uretmek icin kullanilir. Hedef; trend SaaS, yaratici araclar, gorev panolari ve kural yoneticilerinde cesur ama kullanilabilir bir tasarim dili kurmaktir.
+
+Bu stil HTML oyun alanindaki `Neo-Brutalism UI` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- Trend SaaS araclari, yaratici tool, gorev panosu, ideation board, kampanya paneli.
+- Markanin enerjik, cesur, oyunlu ve anti-kurumsal gorunmesi isteniyorsa.
+- Dashboard degil, tekil gorev/form/kart akisi one cikacaksa.
+- Genclik/creator/startup odakli urunlerde.
+
+## Gorsel kimlik
+- **Atmosfer:** Cesur, sert, dogrudan, renkli, oyuncu.
+- **Kompozisyon:** Kalin border'li kartlar, sert shadow, buyuk tipografi, net aksiyonlar.
+- **Renk:** Pastel zemin + siyah border + tek veya iki doygun vurgu.
+- **Kose:** Rounded yok veya cok dusuk; genellikle `0px`.
+- **Golge:** Blur yok; 3-8px offset sert siyah shadow.
+- **Tipografi:** Bold, genis, net, okunabilir.
+
+## Renk paleti
+- `#000000` - border/text
+- `#FFFFFF` - surface
+- `#FEF08A` - yellow
+- `#F9A8D4` - pink
+- `#FDBA74` - orange
+- `#86EFAC` - green
+- `#93C5FD` - blue
+- `#EF4444` - destructive
+
+## Tipografi
+- **Ana font:** Inter, Plus Jakarta Sans, Archivo, system-ui
+- **Baslik:** 22-32px, 800-900
+- **Kart basligi:** 14-18px, 800
+- **Govde:** 13-15px, 600
+- **Button:** 12-14px, 800, uppercase opsiyonel
+
+## Yerlesim sistemi
+1. Bold header: sayfa adi ve buyuk primary CTA.
+2. Brutal card grid: kalin border ve offset shadow.
+3. Form controls: kalin border input/select/textarea.
+4. Status blocks: renkli ama metin destekli.
+5. Action row: primary renkli, secondary beyaz, danger kirmizi.
+6. Feedback: sert toast veya inline block.
+
+## Bilesenler
+- Brutal card
+- Offset shadow button
+- Heavy border input
+- Sticker badge
+- Checkbox tile
+- Radio block
+- Progress bar with hard border
+- Alert block
+- Modal with thick border
+- Empty state poster
+- Action menu
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --brutal-bg: #fef08a;
+  --brutal-surface: #ffffff;
+  --brutal-text: #000000;
+  --brutal-border: #000000;
+  --brutal-primary: #f9a8d4;
+  --brutal-secondary: #93c5fd;
+  --brutal-success: #86efac;
+  --brutal-warning: #fdba74;
+  --brutal-danger: #ef4444;
+  --brutal-radius: 0px;
+  --brutal-border-width: 3px;
+  --brutal-shadow: 5px 5px 0 #000000;
+  --brutal-space: 16px;
+}
+```
+
+## Etkilesim kurallari
+- Button active durumunda `translate(2px, 2px)` ve shadow azalmasi kullanilabilir.
+- Focus state siyah outline + renkli offset ile cok belirgin olmali.
+- Hover renk degistirebilir ama shadow sistemi tutarli kalmali.
+- Form hatalari kalin kirmizi border + metinle gosterilmeli.
+- Drag/drop veya kart tasima varsa shadow/position geri bildirimi sert olmali.
+- Animasyonlar hizli ve mekanik olmali; yavas easing kullanma.
+
+## Yap
+- Kalin border ve sert shadow'u butun sistemde ayni tut.
+- Pastel renkleri status/section ayrimi icin bilincli kullan.
+- Metin hiyerarsisini bold ama okunabilir kur.
+- Primary CTA'yi cok net yap.
+- Empty state'i poster gibi guclu ama aksiyonlu tasarla.
+
+## Yapma
+- Blur shadow, glass, gradient veya soft neumorphic efekt karistirma.
+- Her karti farkli shadow yonuyle tasarlama.
+- Renkleri anlamsiz dekor olarak dagitma.
+- Cok kucuk metinlerde uppercase kullanma.
+- Kurumsal veri tablosu gibi yogun ekranlarda tum yuzeyi brutal yapmak.
+
+## AI uretim promptu
+
+```text
+Neo-Brutalism UI stilinde kalin siyah border'li, sert offset shadow'lu, pastel renkli bir gorev/kural paneli tasarla. Duz koseler, bold tipografi, heavy input/select/textarea, checkbox tile, radio block, progress bar, status badge, alert block ve primary/secondary/danger button varyantlari olsun. Hover, active, focus, disabled, error ve empty state durumlarini ayni brutal token sistemiyle uret.
+```
+
+## Kabul kriterleri
+- Kalin border ve sert offset shadow sistemi tutarli.
+- Pastel renkler hiyerarsi veya durum icin kullaniliyor.
+- Form kontrolleri, kartlar ve butonlar ayni gorsel dile sahip.
+- Focus/error/disabled durumlari eksik degil.
+- Stil cesur ama okunabilir.
+
+
+---
+name: claymorphism-ui
+description: Pastel yuzeyler, buyuk radius, ic/dis yumusak golgeler ve hamur/kil hissi veren dostane arayuzler uretir. Kisisel asistan, yaratici arac ve eglenceli egitim panelleri icin kullanilir.
+---
+
+# Skill 20 - Claymorphism UI
+
+## Amac
+Bu skill, **Claymorphism UI** stilinde yumusak, sevimli, pastel ve dokunsal arayuzler uretmek icin kullanilir. Hedef; kisisel asistan, yaratici workspace, egitim veya hafif araclarda sicak ve davetkar bir his olusturmaktir.
+
+Bu stil HTML oyun alanindaki `Claymorphism` tasarimina karsilik gelir.
+
+## Ne zaman kullanilmali?
+- Kisisel asistan, gunluk, yaratici portfolyo, egitim, cocuksu veya eglenceli mini paneller.
+- Kullaniciya sert kurumsal UI yerine rahat, oyunlu ve dokunsal bir deneyim verilecekse.
+- Form kontrolleri dusuk riskli, sakin ve yaratici is akisi icindeyse.
+- Dashboard yogun veri ekranlarinda ana stil olarak degil, destekleyici alanlarda kullanilabilir.
+
+## Gorsel kimlik
+- **Atmosfer:** Yumusak, pastel, dokunsal, dostane, hafif.
+- **Kompozisyon:** Buyuk radius kartlar, ic/dis golge, yuvarlak inputlar, pill buttons.
+- **Renk:** Pastel pembe, mavi, lavanta, mint, krem.
+- **Kose:** 24-36px buyuk radius.
+- **Golge:** Dis golge + ic golge kombinasyonu; kontrast dusmemeli.
+- **Tipografi:** Yuvarlak ve modern sans fontlar.
+
+## Renk paleti
+- `#FCE7F3` - pink surface
+- `#DBEAFE` - blue surface
+- `#EDE9FE` - lavender
+- `#DCFCE7` - mint
+- `#FFFFFF` - highlight
+- `#334155` - text
+- `#64748B` - muted
+- `#EC4899` - primary
+- `#8B5CF6` - secondary
+
+## Tipografi
+- **Ana font:** Plus Jakarta Sans, Inter, Nunito, Segoe UI
+- **Baslik:** 18-24px, 700-800
+- **Govde:** 13-15px, 500
+- **Label:** 10-12px, 700, uppercase opsiyonel
+- **Button:** 12-14px, 700
+
+## Yerlesim sistemi
+1. Soft shell: pastel arka plan veya yumusak surface.
+2. Main clay card: buyuk radius, ic/dis golge.
+3. Form controls: rounded input, select, slider, checkbox/radio.
+4. Soft progress/metric: pill bar, gentle status.
+5. Action row: rounded primary/secondary buttons.
+6. Friendly empty state: kisa metin ve pozitif aksiyon.
+
+## Bilesenler
+- Clay card
+- Soft input
+- Rounded select
+- Pill toggle
+- Soft slider
+- Bubble badge
+- Inner shadow panel
+- Rounded progress
+- Friendly toast
+- Empty state bubble
+- Avatar chip
+
+## Tasarim tokenlari
+
+```css
+:root {
+  --clay-bg: #fce7f3;
+  --clay-surface: #ffecf2;
+  --clay-surface-2: #dbeafe;
+  --clay-text: #334155;
+  --clay-muted: #64748b;
+  --clay-primary: #ec4899;
+  --clay-secondary: #8b5cf6;
+  --clay-highlight: #ffffff;
+  --clay-radius: 30px;
+  --clay-shadow: 10px 10px 20px rgba(0,0,0,.06), inset -8px -8px 16px rgba(0,0,0,.08), inset 8px 8px 16px rgba(255,255,255,.75);
+  --clay-space: 18px;
+}
+
+.clay-card {
+  background: var(--clay-surface);
+  color: var(--clay-text);
+  border-radius: var(--clay-radius);
+  box-shadow: var(--clay-shadow);
+}
+```
+
+## Etkilesim kurallari
+- Hover'da yuzey hafif yukselebilir ama shadow abartilmamali.
+- Active durumda buton ic golgeye donebilir.
+- Focus state pastel zeminde kaybolmamali; net outline kullan.
+- Error state soft stili bozmayacak sekilde kirmizi border + metinle gelmeli.
+- Disabled state opaklik dusurur ama label okunabilir kalir.
+- Uzun formlarda buyuk radius ve bosluk azaltip okunabilir yogunluk korunmali.
+
+## Yap
+- Pastel renkleri dengeli kullan; metni koyu tut.
+- Ic ve dis golgeleri tokenlarla yonet.
+- Rounded kontrolleri tutarli radius sistemiyle kur.
+- Friendly empty/loading durumlari ekle.
+- Kisisel/yaratici uygulamalarda sicak mikro metin kullan.
+
+## Yapma
+- Dusuk kontrastli pastel metin kullanma.
+- Her yuzeye coklu golge verip arayuzu bulaniklastirma.
+- Kurumsal veri tablolarini tamamen clay yapmak.
+- Radius degerlerini rastgele degistirmek.
+- Focus state'i sadece shadow ile anlatmak.
+
+## AI uretim promptu
+
+```text
+Claymorphism UI stilinde pastel renkli, buyuk radiuslu ve ic/dis yumusak golgeli bir kisisel asistan veya yaratici arac paneli tasarla. Clay card, soft input, rounded select, pill toggle, slider, avatar chip, progress bar, friendly empty state ve rounded primary/secondary button olsun. Kontrast, focus ring, error state, disabled state ve loading state okunabilir kalsin.
+```
+
+## Kabul kriterleri
+- Pastel, dokunsal ve yumusak clay hissi net.
+- Ic/dis golge tokenlari tutarli.
+- Metin kontrasti yeterli.
+- Form kontrolleri ve butonlar ayni radius/golge diline sahip.
+- Focus, error, disabled ve loading durumlari tanimli.
