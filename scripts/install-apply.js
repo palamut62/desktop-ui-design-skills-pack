@@ -83,7 +83,14 @@ function parseArgs(argv) {
     if (arg === "--target") {
       options.target = args[++i];
     } else if (arg === "--skills") {
-      options.skills = args[++i];
+      const values = [];
+      while (args[i + 1] && !args[i + 1].startsWith("--")) {
+        values.push(args[++i]);
+      }
+      if (!values.length) {
+        throw new Error("--skills requires at least one skill id");
+      }
+      options.skills = values.join(",");
     } else if (arg === "--profile") {
       const profile = args[++i];
       if (profile && profile !== "all") {

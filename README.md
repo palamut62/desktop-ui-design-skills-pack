@@ -129,7 +129,7 @@ Installer options:
 
 ```text
 --target <target>   Install destination.
---skills <ids>      Comma-separated skill numbers or folder names.
+--skills <ids>      Comma-separated or space-separated skill numbers/folder names.
 --dry-run           Print plan without copying.
 --json              Output machine-readable JSON.
 --list              List available skills.
@@ -234,6 +234,7 @@ npm test
 node scripts/install-apply.js --list
 node scripts/install-apply.js --target claude --dry-run
 node scripts/install-apply.js --target codex --skills 04,14,15 --dry-run
+.\install.ps1 --target codex-project --skills "01,19" --dry-run
 ```
 
 ## Deployment
@@ -282,4 +283,3 @@ The installer copies local Markdown skill folders into agent skill directories. 
 ## License
 
 MIT. See [LICENSE](./LICENSE).
-
