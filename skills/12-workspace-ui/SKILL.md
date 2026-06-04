@@ -3,7 +3,7 @@ name: workspace-ui
 description: Dosya agaci, sekmeler, editor/detail alani, inspector paneli ve alt log/status paneli olan yogun masaustu calisma alani arayuzleri uretir. Codex, Claude Code, OpenCode, kural yoneticisi ve proje editorleri icin kullanilir.
 ---
 
-# Skill 13 - Workspace UI
+# Skill 12 - Workspace UI
 
 ## Amac
 Bu skill, kompleks is akislari icin **Workspace UI** tasarlamakta kullanilir. Hedef; dosya/proje navigasyonu, acik sekmeler, duzenleme alani, ayar/inspector paneli, terminal/log ve status bar gibi bolgeleri tutarli bir masaustu calisma ortamina yerlestirmektir.
@@ -128,4 +128,5 @@ Workspace UI stilinde yogun bir masaustu calisma alani tasarla. Solda activity r
 - Sekme, dirty state ve secili dosya durumu gorunuyor.
 - Klavye/focus akisi workbench icinde kesintisiz.
 - 1366x768 ve 1920x1080 masaustu ekranlarda yogunluk bozulmuyor.
+
 

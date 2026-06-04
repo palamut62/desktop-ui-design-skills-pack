@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "packageId": "desktop-ui-design-skills",
+  "version": "0.1.0",
+  "skills": [
+    { "id": "01-glassmorphism-dashboard", "name": "Glassmorphism Dashboard", "category": "dashboard" },
+    { "id": "02-dark-developer-ui", "name": "Dark Developer UI", "category": "developer-tools" },
+    { "id": "03-minimal-sidebar-ui", "name": "Minimal Sidebar UI", "category": "business-app" },
+    { "id": "04-command-palette-ui", "name": "Command Palette UI", "category": "launcher" },
+    { "id": "05-card-dashboard-ui", "name": "Card Dashboard UI", "category": "dashboard" },
+    { "id": "06-neumorphism-ui", "name": "Neumorphism UI", "category": "soft-ui" },
+    { "id": "07-fluent-windows-11-ui", "name": "Fluent Windows 11 UI", "category": "windows" },
+    { "id": "08-split-panel-workspace", "name": "Split Panel Workspace", "category": "workspace" },
+    { "id": "09-kanban-board-ui", "name": "Kanban Board UI", "category": "project-management" },
+    { "id": "10-terminal-gui-hybrid", "name": "Terminal + GUI Hybrid", "category": "developer-tools" },
+    { "id": "11-floating-tool-window", "name": "Floating Tool Window", "category": "utility" },
+    { "id": "12-workspace-ui", "name": "Workspace UI", "category": "workspace" },
+    { "id": "13-settings-first-ui", "name": "Settings-First UI", "category": "settings" },
+    { "id": "14-data-table-admin-ui", "name": "Data Table Admin UI", "category": "admin" },
+    { "id": "15-ai-chat-tool-panel-ui", "name": "AI Chat + Tool Panel UI", "category": "ai-product" },
+    { "id": "16-classic-windows-form-ui", "name": "Classic Windows Form UI", "category": "retro-windows" },
+    { "id": "17-cyberpunk-hud-ui", "name": "Cyberpunk HUD UI", "category": "themed-hud" },
+    { "id": "18-neo-brutalism-ui", "name": "Neo-Brutalism UI", "category": "bold-saas" },
+    { "id": "19-claymorphism-ui", "name": "Claymorphism UI", "category": "playful-ui" }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "desktop-ui-design-skills",
+  "version": "0.1.0",
+  "description": "Desktop UI/UX design skills for Codex: 19 reusable style packs for AI-assisted desktop application design.",
+  "author": {
+    "name": "palamut62",
+    "url": "https://github.com/palamut62"
+  },
+  "homepage": "https://desktop-ui-design-skills.vercel.app",
+  "repository": "https://github.com/palamut62/desktop-ui-design-skills-pack",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "agents",
+    "skills",
+    "desktop-ui",
+    "ui-design",
+    "ux",
+    "ai-coding"
+  ],
+  "skills": "./skills/",
+  "mcpServers": {},
+  "interface": {
+    "displayName": "Desktop UI Design Skills",
+    "shortDescription": "19 desktop UI/UX skills for Codex and AI coding agents.",
+    "longDescription": "A portable skill pack for generating desktop application interfaces across Electron, Tauri, WinForms, WPF, WinUI, Avalonia, PyQt, and web-based desktop shells.",
+    "developerName": "palamut62",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://desktop-ui-design-skills.vercel.app",
+    "brandColor": "#4F46E5",
+    "screenshots": [],
+    "defaultPrompt": [
+      "Choose the closest desktop UI design skill before generating screens.",
+      "Follow the selected skill's token, layout, component state, accessibility, and acceptance criteria.",
+      "Use Data Table Admin UI for dense admin lists, Settings-First UI for configuration panels, and AI Chat + Tool Panel UI for AI product surfaces."
+    ]
+  }
+}

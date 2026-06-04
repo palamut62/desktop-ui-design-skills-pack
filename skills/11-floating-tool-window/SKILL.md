@@ -3,7 +3,7 @@ name: floating-tool-window
 description: Her zaman ustte duran, koseye sabitlenebilen, kompakt ama islevsel mini masaustu arac pencereleri tasarlar. OCR capture, clipboard manager, quick launcher, color picker, screenshot tool ve hizli not panelleri icin kullanilir.
 ---
 
-# Skill 12 - Floating Tool Window
+# Skill 11 - Floating Tool Window
 
 ## Amac
 Bu skill, masaustu uygulamalarinda **Floating Tool Window** stilini tutarli sekilde uretmek icin kullanilir. Hedef; ana uygulama alanini kaplamadan kullaniciya hizli araclar, mikro formlar, anlik durumlar ve tek tiklik aksiyonlar sunan kompakt pencereler tasarlamaktir.
@@ -130,3 +130,4 @@ Floating Tool Window stilinde kompakt bir masaustu arac penceresi tasarla. 280-3
 - En az bir mikro form alani, bir status pill ve bir feedback/preview alani var.
 - Icon-only aksiyonlarda tooltip/accessibility dusunulmus.
 - 1366x768 ekranda pencere ana icerigi gereksiz kapatmiyor.
+

@@ -1,0 +1,68 @@
+{
+  "name": "desktop-ui-design-skills-pack",
+  "version": "0.1.0",
+  "description": "Installable desktop UI/UX design skills for Codex, Claude Code, Cursor, OpenCode, and adjacent AI coding agents.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "skills",
+    "codex",
+    "claude-code",
+    "cursor",
+    "opencode",
+    "desktop-ui",
+    "ui-design",
+    "ux",
+    "winforms",
+    "electron",
+    "wpf",
+    "winui",
+    "avalonia",
+    "pyqt"
+  ],
+  "author": {
+    "name": "palamut62",
+    "url": "https://github.com/palamut62"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palamut62/desktop-ui-design-skills-pack.git"
+  },
+  "homepage": "https://github.com/palamut62/desktop-ui-design-skills-pack#readme",
+  "bugs": {
+    "url": "https://github.com/palamut62/desktop-ui-design-skills-pack/issues"
+  },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "AGENTS.md",
+    "ALL_SKILLS.md",
+    "LICENSE",
+    "README.md",
+    "VERSION",
+    "index.html",
+    "install.ps1",
+    "install.sh",
+    "manifests/",
+    "scripts/",
+    "skills/"
+  ],
+  "bin": {
+    "desktop-ui-design-skills": "scripts/install-apply.js",
+    "desktop-ui-design-skills-install": "scripts/install-apply.js"
+  },
+  "scripts": {
+    "postinstall": "echo \"desktop-ui-design-skills-pack installed. Run: npx desktop-ui-design-skills --help\"",
+    "list": "node scripts/install-apply.js --list",
+    "install:dry-run": "node scripts/install-apply.js --target claude --dry-run",
+    "validate": "node scripts/validate.js",
+    "test": "node scripts/validate.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

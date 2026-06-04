@@ -3,7 +3,7 @@ name: ai-chat-tool-panel-ui
 description: Sol sohbet alani ve sag arac/parametre paneli olan AI destekli uretim, slayt, cheatsheet, kod ve belge arayuzleri uretir.
 ---
 
-# Skill 16 - AI Chat + Tool Panel UI
+# Skill 15 - AI Chat + Tool Panel UI
 
 ## Amac
 Bu skill, **AI Chat + Tool Panel UI** biciminde sohbet ve arac kontrolunu ayni ekranda birlestiren arayuzler uretir. Hedef; kullanicinin dogal dil ile AI'a talimat verirken, sag panelde parametreleri, export ayarlarini, kaynaklari ve calisma sonucunu yonetebilmesidir.
@@ -122,4 +122,5 @@ AI Chat + Tool Panel UI stilinde iki panelli bir masaustu arayuzu tasarla. Solda
 - Composer sticky ve klavye davranisi net.
 - Export/copy/download aksiyonlari gorunur.
 - Dar pencerede sag panel davranisi tanimli.
+
 

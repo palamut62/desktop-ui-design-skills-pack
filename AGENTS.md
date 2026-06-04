@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Bu repoda masaustu uygulama UI/UX tasarimlari icin tekrar kullanilabilir Markdown skill dosyalari bulunur.
+Bu repoda masaustu uygulama UI/UX tasarimlari icin tekrar kullanilabilir ve kurulabilir Markdown skill dosyalari bulunur.
 
 ## Genel talimat
 
@@ -26,7 +26,6 @@ Bu repoda masaustu uygulama UI/UX tasarimlari icin tekrar kullanilabilir Markdow
 - Split Panel Workspace: not, dosya, markdown, kural/skill yoneticisi.
 - Kanban Board: gorev ve proje yonetimi.
 - Terminal + GUI Hybrid: CLI wrapper, log izleme, sistem monitoru.
-- Windows Forms App UI: modern VB.NET/C# WinForms, kurumsal kayit/takip, DataGridView.
 - Floating Tool Window: OCR capture, clipboard manager, quick launcher, mini arac penceresi.
 - Workspace UI: Codex/Claude/OpenCode benzeri cok panelli calisma alani.
 - Settings-First UI: API key, model, entegrasyon, guvenlik ve ayar panelleri.
@@ -36,6 +35,15 @@ Bu repoda masaustu uygulama UI/UX tasarimlari icin tekrar kullanilabilir Markdow
 - Cyberpunk HUD UI: neon, sci-fi, veri yogun kontrol ve oyun panelleri.
 - Neo-Brutalism UI: kalin border, sert shadow, pastel ve bold SaaS/task panelleri.
 - Claymorphism UI: pastel, buyuk radius, yumusak ic/dis golgeli yaratici paneller.
+
+## Kurulum ve dagitim
+
+- Paket kurulumu icin `install.sh`, `install.ps1` veya `scripts/install-apply.js` kullanilir.
+- Desteklenen hedefler: `claude`, `claude-project`, `codex`, `codex-project`, `cursor`, `opencode`.
+- Claude plugin manifesti `.claude-plugin/plugin.json` icindedir.
+- Codex plugin manifesti `.codex-plugin/plugin.json` icindedir.
+- `manifests/skills.json` skill katalog manifestidir.
+- `ALL_SKILLS.md` dosyasi `skills/` klasorunden yeniden uretilmelidir; elle drift olusturma.
 
 ## Uygulama ilkeleri
 

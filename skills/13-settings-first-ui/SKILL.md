@@ -3,7 +3,7 @@ name: settings-first-ui
 description: API anahtari, model secimi, guvenlik, entegrasyon, faturalandirma ve hassas konfigurasyon formlarina odaklanan ayar merkezli masaustu arayuzleri uretir.
 ---
 
-# Skill 14 - Settings-First UI
+# Skill 13 - Settings-First UI
 
 ## Amac
 Bu skill, kullanicinin ana gorevinin konfigurasyon yapmak oldugu uygulamalar icin **Settings-First UI** tasarlar. Hedef; karmasik ayarlari guvenli, gruplanmis, dogrulanabilir ve geri alinabilir bicimde sunmaktir.
@@ -119,4 +119,5 @@ Settings-First UI stilinde bir API/model ayar paneli tasarla. Sol kategori navig
 - Inline validation ve sticky save bar var.
 - Hata, basari, warning ve unsaved state gorunuyor.
 - Klavye navigasyonu ve focus state eksik degil.
+
 

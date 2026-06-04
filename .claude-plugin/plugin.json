@@ -1,0 +1,28 @@
+{
+  "name": "desktop-ui-design-skills",
+  "version": "0.1.0",
+  "description": "Desktop UI/UX design skills for Claude Code: 19 reusable styles for desktop apps, dashboards, workspaces, tables, chat panels, WinForms, and themed tool surfaces.",
+  "author": {
+    "name": "palamut62",
+    "url": "https://github.com/palamut62"
+  },
+  "homepage": "https://desktop-ui-design-skills.vercel.app",
+  "repository": "https://github.com/palamut62/desktop-ui-design-skills-pack",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "desktop-ui",
+    "ui-design",
+    "ux",
+    "winforms",
+    "electron",
+    "wpf",
+    "ai-coding"
+  ],
+  "mcpServers": {},
+  "skills": [
+    "./skills/"
+  ],
+  "commands": []
+}

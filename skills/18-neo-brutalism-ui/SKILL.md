@@ -3,7 +3,7 @@ name: neo-brutalism-ui
 description: Kalin siyah border, sert offset shadow, doygun pastel zeminler, duz koseler ve cesur tipografiyle modern neo-brutalist arayuzler uretir.
 ---
 
-# Skill 19 - Neo-Brutalism UI
+# Skill 18 - Neo-Brutalism UI
 
 ## Amac
 Bu skill, **Neo-Brutalism UI** stilinde dikkat cekici, sert, renkli ve ozguvenli arayuzler uretmek icin kullanilir. Hedef; trend SaaS, yaratici araclar, gorev panolari ve kural yoneticilerinde cesur ama kullanilabilir bir tasarim dili kurmaktir.
@@ -116,3 +116,4 @@ Neo-Brutalism UI stilinde kalin siyah border'li, sert offset shadow'lu, pastel r
 - Form kontrolleri, kartlar ve butonlar ayni gorsel dile sahip.
 - Focus/error/disabled durumlari eksik degil.
 - Stil cesur ama okunabilir.
+

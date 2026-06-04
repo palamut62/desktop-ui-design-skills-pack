@@ -3,12 +3,12 @@ name: classic-windows-form-ui
 description: Windows 95/98/2000 donemi retro masaustu estetigini, gri 3D cerceveleri, inset/outset kontrolleri ve legacy form davranisini bilincli olarak yeniden uretir.
 ---
 
-# Skill 17 - Classic Windows Form UI
+# Skill 16 - Classic Windows Form UI
 
 ## Amac
 Bu skill, modern WinForms standardindan farkli olarak **Classic Windows Form UI** yani retro/legacy Windows form estetigini tasarlamak icin kullanilir. Hedef; nostaljik, sistem araci hissi veren, piksel netliginde, 3D border'li ve sade form panelleri uretmektir.
 
-Bu stil HTML oyun alanindaki `Classic Windows Form` tasarimina karsilik gelir. Modern kurumsal WinForms icin `11-windows-forms-app-ui` kullanilmalidir.
+Bu stil HTML oyun alanindaki `Classic Windows Form` tasarimina karsilik gelir.
 
 ## Ne zaman kullanilmali?
 - Nostaljik sistem araci, retro database paneli, Win98 simulatoru, legacy admin tool veya egitim/demo arayuzu.
@@ -129,3 +129,4 @@ Classic Windows Form UI stilinde retro bir masaustu ayar/dialog penceresi tasarl
 - GroupBox, dialog button row ve status bar var.
 - Klavye/focus davranisi klasik masaustu beklentisine uygun.
 - Modern blur/gradient/dekoratif kart dili kullanilmamis.
+

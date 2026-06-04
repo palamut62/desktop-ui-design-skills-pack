@@ -3,7 +3,7 @@ name: data-table-admin-ui
 description: Filtrelenebilir veri tablolari, arama, status badge, bulk action, pagination ve detay paneli olan yogun admin arayuzleri uretir.
 ---
 
-# Skill 15 - Data Table Admin UI
+# Skill 14 - Data Table Admin UI
 
 ## Amac
 Bu skill, liste yonetimi ve operasyonel admin ekranlari icin **Data Table Admin UI** standardi saglar. Hedef; cok sayida kaydi tarama, filtreleme, siralama, secme, toplu islem ve detay inceleme akisini hizli ve guvenilir hale getirmektir.
@@ -122,4 +122,5 @@ Data Table Admin UI stilinde yogun bir admin liste ekrani tasarla. Ust toolbar, 
 - Status badge ve sort state yalnizca renge bagli degil.
 - Empty/loading/error durumlari var.
 - Dar pencerede tablo yatay scroll veya kart listeye donusebiliyor.
+
 

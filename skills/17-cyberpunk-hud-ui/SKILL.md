@@ -3,7 +3,7 @@ name: cyberpunk-hud-ui
 description: Neon, keskin kenarli, veri yogun, futuristik HUD ve kontrol paneli arayuzleri uretir. Oyun yonetim konsollari, sci-fi paneller ve siber guvenlik gosterge ekranlari icin kullanilir.
 ---
 
-# Skill 18 - Cyberpunk HUD UI
+# Skill 17 - Cyberpunk HUD UI
 
 ## Amac
 Bu skill, **Cyberpunk HUD UI** stilinde futuristik, neon vurgulu, keskin ve veri yogun arayuzler uretmek icin kullanilir. Hedef; oyun/sci-fi kontrol odasi hissi verirken okunabilirligi ve islevselligi kaybetmeyen bir panel sistemi kurmaktir.
@@ -125,3 +125,4 @@ Cyberpunk HUD UI stilinde siyah zeminli, cyan neon border'li, keskin koseli bir 
 - Alarm/warning/normal durumlari ayriliyor.
 - Animasyon ve glow metin okunabilirligini bozmuyor.
 - Kritik aksiyonlar onayli.
+

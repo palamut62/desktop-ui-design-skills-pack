@@ -3,7 +3,7 @@ name: claymorphism-ui
 description: Pastel yuzeyler, buyuk radius, ic/dis yumusak golgeler ve hamur/kil hissi veren dostane arayuzler uretir. Kisisel asistan, yaratici arac ve eglenceli egitim panelleri icin kullanilir.
 ---
 
-# Skill 20 - Claymorphism UI
+# Skill 19 - Claymorphism UI
 
 ## Amac
 Bu skill, **Claymorphism UI** stilinde yumusak, sevimli, pastel ve dokunsal arayuzler uretmek icin kullanilir. Hedef; kisisel asistan, yaratici workspace, egitim veya hafif araclarda sicak ve davetkar bir his olusturmaktir.
@@ -122,3 +122,4 @@ Claymorphism UI stilinde pastel renkli, buyuk radiuslu ve ic/dis yumusak golgeli
 - Metin kontrasti yeterli.
 - Form kontrolleri ve butonlar ayni radius/golge diline sahip.
 - Focus, error, disabled ve loading durumlari tanimli.
+
